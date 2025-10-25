@@ -39,7 +39,7 @@
       </div>
       <div class="bg-gray-100 border-t border-gray-200">
         <div class="max-w-6xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between text-xs text-gray-500">
-          <div class="mb-2 md:mb-0">© <span id="year"></span> AtticLounges — Capstone Project • Dibuat oleh [Nama Kamu] & [Nama Rekan]</div>
+          <div class="mb-2 md:mb-0">© <span id="year"></span> AtticLounges — Capstone Project</div>
           <div class="flex gap-4"><a href="#" class="hover:text-gray-700">Privacy</a><a href="#" class="hover:text-gray-700">Terms</a><a href="#" class="hover:text-gray-700">Credits</a></div>
         </div>
       </div>
