@@ -1,13 +1,8 @@
-<<<<<<< HEAD
+# 🚧 Still in Progress
 # 🛍️ Attic Lounges - Thrift Store Website
-=======
-# 🚧 Still in Progress  
-
 This project is currently under development. Some features may not be fully stable or completed.  
 
 # Attic Lounges - Thrift Store Website
->>>>>>> fe9e79f351ba72e46cc68385acf7ea8a5d8b51a6
-
 Website thrift store modern dengan sistem **owner-only product management** dan **AI-powered chat**. Hanya owner yang bisa mengelola produk, sementara user biasa bisa berbelanja dan berinteraksi dengan AI chatbot.
 
 ## ✨ Features
