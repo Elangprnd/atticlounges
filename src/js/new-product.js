@@ -1,28 +1,29 @@
-// ===== CONFIGURATION ===== //
+// Konfigurasi untuk halaman produk
 const API_URL = 'http://localhost:4002/api/products';
-const MAX_PRODUCTS = 8; // batas untuk “new products”
+const MAX_PRODUCTS = 8; // batas untuk "new products"
 let allProducts = [];
 let filteredProducts = [];
 
-// Normalize product id to a stable string
+// Normalisasi ID produk jadi string yang stabil
 function getProductId(product) {
   const raw = product?._id ?? product?.id ?? '';
   return String(raw);
 }
 
-// Small helper to add a class temporarily for micro animations
+// Helper untuk tambah class sementara buat animasi
 function addTemporaryClass(el, className, durationMs = 300) {
   if (!el) return;
   el.classList.add(className);
   setTimeout(() => el.classList.remove(className), durationMs);
 }
 
-// ===== USER & CART UTILITIES ===== //
+// Fungsi untuk user dan keranjang
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
+// Ambil data keranjang dari localStorage
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';

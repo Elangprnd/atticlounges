@@ -1,24 +1,24 @@
-// ===== REVIEW SYSTEM ===== //
+// Fungsi untuk sistem review
 
 let currentOrder = null;
 let currentRating = 0;
 
-// ===== INITIALIZATION ===== //
+// Jalankan kode pas halaman udah loaded
 document.addEventListener('DOMContentLoaded', async () => {
-    // Get order ID from URL parameter
+    // Ambil order ID dari URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('review');
     
     if (orderId) {
-        // Load order info and show review modal
+        // Load info order dan tampilkan modal review
         await loadOrderInfo(orderId);
         showReviewModal();
     }
     
-    // Setup event listeners
+    // Setup event listener
     setupReviewEventListeners();
     
-    // Render existing reviews on homepage
+    // Render review yang udah ada di homepage
     renderReviewsOnHomepage();
 });
 

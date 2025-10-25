@@ -1,20 +1,21 @@
-// ===== ADMIN ORDER MANAGEMENT ===== //
+// Fungsi untuk admin mengelola pesanan
 const ORDER_SERVICE = 'http://localhost:4003';
 
 let allOrders = [];
 let currentFilter = 'all';
 
-// Initialize page
+// Jalankan kode pas halaman udah loaded
 document.addEventListener('DOMContentLoaded', () => {
     loadOrders();
     setupEventListeners();
 });
 
+// Setup event listener untuk semua tombol
 function setupEventListeners() {
-    // Refresh button
+    // Tombol refresh
     document.getElementById('refresh-orders-btn').addEventListener('click', loadOrders);
     
-    // Filter buttons
+    // Tombol filter
     document.getElementById('filter-pending-btn').addEventListener('click', () => {
         currentFilter = 'pending';
         filterOrders();
@@ -25,7 +26,7 @@ function setupEventListeners() {
         filterOrders();
     });
     
-    // Status modal
+    // Modal status
     document.getElementById('close-status-modal').addEventListener('click', closeStatusModal);
     document.getElementById('cancel-status').addEventListener('click', closeStatusModal);
     document.getElementById('update-status').addEventListener('click', updateOrderStatus);

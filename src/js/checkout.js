@@ -1,15 +1,15 @@
-// ===== CHECKOUT FUNCTIONALITY ===== //
+// Fungsi untuk checkout
 
 let checkoutItems = [];
 
-// ===== CART FUNCTIONS ===== //
+// Ambil data keranjang dari localStorage
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
   return JSON.parse(localStorage.getItem(cartKey)) || [];
 }
 
-// Get current user ID from token
+// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;

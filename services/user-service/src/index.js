@@ -1,17 +1,21 @@
+// Import dependencies yang dibutuhkan
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 
+// Setup Express app
 const app = express()
 app.use(cors())
 app.use(express.json())
 
+// Konfigurasi port dan database
 const PORT = process.env.PORT || 4001
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/user_service'
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwt'
 
+// Schema untuk model User
 const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
@@ -21,7 +25,7 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema)
 
-// Middleware untuk autentikasi
+// Middleware untuk cek token JWT
 const authenticateToken = (req, res, next) => {
   const auth = req.headers.authorization || ''
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : null

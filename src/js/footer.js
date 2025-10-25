@@ -1,12 +1,14 @@
-// Inject a unified footer (same as index.html) across all pages
+// Inject footer yang sama di semua halaman
 (function mountUnifiedFooter() {
   document.addEventListener('DOMContentLoaded', () => {
-    // Remove any existing page-specific footers
+    // Hapus footer yang udah ada sebelumnya
     document.querySelectorAll('footer').forEach(f => f.remove());
 
+    // Cek apakah kita di folder pages atau tidak
     const isInPages = window.location.pathname.includes('/pages/');
     const base = isInPages ? '..' : '.';
 
+    // Buat elemen footer baru
     const footer = document.createElement('footer');
     footer.className = 'bg-gray-50 text-gray-700 mt-12 border-t border-gray-200';
     footer.innerHTML = `
@@ -44,6 +46,7 @@
         </div>
       </div>
     `;
+    // Tambahkan footer ke halaman
     document.body.appendChild(footer);
   });
 })();

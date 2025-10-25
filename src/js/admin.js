@@ -1,28 +1,29 @@
-// ===== ADMIN PANEL FUNCTIONALITY ===== //
+// Fungsi untuk admin panel
 
 let products = [];
 let currentUser = null;
 
-// ===== INITIALIZATION ===== //
+// Jalankan kode pas halaman udah loaded
 document.addEventListener('DOMContentLoaded', async () => {
-    // Check if user is logged in and is owner
+    // Cek apakah user login dan punya akses owner
     await checkOwnerAuth();
     
-    // Load products
+    // Load produk dari database
     await loadProducts();
     
-    // Setup event listeners
+    // Setup event listener
     setupEventListeners();
     
-    // Update stats
+    // Update statistik
     updateStats();
 });
 
-// ===== AUTHENTICATION ===== //
+// Cek apakah user punya akses owner
 async function checkOwnerAuth() {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     
+    // Kalau bukan owner, redirect ke homepage
     if (!token || !user || user.role !== 'owner') {
         alert('Akses ditolak. Hanya owner yang bisa mengakses halaman ini.');
         window.location.href = '../index.html';

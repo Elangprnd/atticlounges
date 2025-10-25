@@ -1,15 +1,16 @@
-// Inject a unified header and search overlay across all pages
+// Inject header yang sama di semua halaman
 (function mountUnifiedHeader() {
   document.addEventListener('DOMContentLoaded', () => {
-    // Skip if unified header already present (index.html)
+    // Skip kalau header udah ada (di index.html)
     if (document.getElementById('mainHeader')) return;
 
-    // Remove any existing page-specific headers to prevent duplicates
+    // Hapus header yang udah ada sebelumnya
     document.querySelectorAll('header').forEach(h => h.remove());
 
+    // Cek apakah kita di folder pages atau tidak
     const isInPages = window.location.pathname.includes('/pages/');
     const base = isInPages ? '..' : '.';
-    const to = (p) => isInPages ? p.replace('pages/', '') : p; // link to pages when at root
+    const to = (p) => isInPages ? p.replace('pages/', '') : p; // link ke pages kalau di root
     const pageHref = (p) => isInPages ? p : `pages/${p}`;
 
     const wrapper = document.createElement('div');

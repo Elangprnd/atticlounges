@@ -1,9 +1,10 @@
-// ===== E-COMMERCE MAIN APPLICATION ===== //
+// URL untuk service backend
 const USER_SERVICE = 'http://localhost:4001';
 const PRODUCT_SERVICE = 'http://localhost:4002';
 
-// ===== LOGIN & AUTHENTICATION ===== //
+// Fungsi untuk mengatur modal login
 function loginModal() {
+  // Ambil semua elemen yang dibutuhkan
   const openBtn = document.getElementById("login");
   const closeBtn = document.getElementById("closeModal");
   const modal = document.getElementById("loginModal");
@@ -14,28 +15,32 @@ function loginModal() {
   const adminContent = document.getElementById("admin-login-content");
   const adminForm = document.getElementById("admin-login-form");
 
+  // Cek apakah elemen ada, kalau tidak ada langsung keluar
   if (!openBtn || !closeBtn || !modal) return; 
 
+  // Event listener untuk buka modal
   openBtn.addEventListener("click", () => {
     modal.classList.remove("hidden");
-    // Reset to user tab
     switchToUserTab();
   });
 
+  // Event listener untuk tutup modal
   closeBtn.addEventListener("click", () => {
     modal.classList.add("hidden");
   });
 
+  // Tutup modal kalau klik di luar area modal
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       modal.classList.add("hidden");
     }
   });
 
-  // Tab switching
+  // Event listener untuk ganti tab
   userTab?.addEventListener("click", switchToUserTab);
   adminTab?.addEventListener("click", switchToAdminTab);
 
+  // Fungsi untuk ganti ke tab user
   function switchToUserTab() {
     userTab.classList.add("bg-white", "text-gray-900", "shadow-sm");
     userTab.classList.remove("text-gray-500");
@@ -45,6 +50,7 @@ function loginModal() {
     adminContent.classList.add("hidden");
   }
 
+  // Fungsi untuk ganti ke tab admin
   function switchToAdminTab() {
     adminTab.classList.add("bg-white", "text-gray-900", "shadow-sm");
     adminTab.classList.remove("text-gray-500");
@@ -54,13 +60,11 @@ function loginModal() {
     userContent.classList.add("hidden");
   }
 
-  // User login form
   const userLoginForm = document.getElementById("user-login-form");
   if (userLoginForm) {
     userLoginForm.addEventListener("submit", handleUserLogin);
   }
 
-  // Switch to signup
   const switchToSignupBtn = document.getElementById("switch-to-signup");
   if (switchToSignupBtn) {
     switchToSignupBtn.addEventListener("click", () => {
@@ -69,11 +73,9 @@ function loginModal() {
     });
   }
 
-  // Admin login form
   adminForm?.addEventListener("submit", handleAdminLogin);
 }
 
-// SIGN UP MODAL
 function signupModal() {
   const openBtn = document.getElementById("sign-up");
   const closeBtn = document.getElementById("closeSignupModal");
@@ -97,12 +99,10 @@ function signupModal() {
     }
   });
 
-  // Handle signup form submission
   if (signupForm) {
     signupForm.addEventListener("submit", handleSignup);
   }
 
-  // Switch to login modal
   if (switchToLoginBtn) {
     switchToLoginBtn.addEventListener("click", () => {
       modal.classList.add("hidden");
@@ -111,7 +111,6 @@ function signupModal() {
   }
 }
 
-// Handle user login
 async function handleUserLogin(e) {
   e.preventDefault();
   

@@ -1,11 +1,12 @@
-// ===== PROFILE PAGE FUNCTIONALITY ===== //
+// Fungsi untuk halaman profil
 
-// ===== CART FUNCTIONS ===== //
+// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
+// Ambil data keranjang dari localStorage
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';

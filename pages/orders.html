@@ -1,32 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags untuk responsive dan charset -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders - Attic Lounges</title>
+    
+    <!-- Google Fonts untuk typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS files untuk styling -->
     <link href="../src/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Unified header injected by src/js/header.js -->
+    <!-- Header yang di-inject otomatis oleh src/js/header.js -->
 
-    <!-- Unified header injected by src/js/header.js -->
-
-    <!-- Main Content -->
+    <!-- Main Content untuk my orders -->
     <main class="min-h-screen py-8">
         <div class="max-w-5xl mx-auto px-6">
             <h1 class="text-3xl font-bold text-gray-800 mb-8">My Orders</h1>
+            <!-- Container untuk menampilkan daftar pesanan -->
             <div id="orders-container" class="space-y-6"></div>
+            <!-- Pesan ketika belum ada pesanan -->
             <div id="no-orders" class="text-center py-12 hidden">
                 <p class="text-gray-500 text-lg mb-4">You haven't placed any orders yet.</p>
                 <a href="product.html" class="inline-block px-6 py-2 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] transition">Start Shopping</a>
             </div>
         </div>
     </main>
-    <!-- Modals injected by src/js/app.js -->
+    <!-- Modal yang di-inject oleh src/js/app.js -->
 
     <!-- Unified footer injected by src/js/footer.js -->
 

@@ -1,29 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Meta tags untuk responsive dan charset -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Shopping Cart - Attic Lounges</title>
+    
+    <!-- Google Fonts untuk typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS files untuk styling -->
     <link href="../src/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body class="bg-gray-50 text-gray-800 w-full">
 
-    <!-- Unified header injected by src/js/header.js -->
+    <!-- Header yang di-inject otomatis oleh src/js/header.js -->
 
-    <!-- Main Content -->
+    <!-- Main Content untuk shopping cart -->
     <main class="min-h-screen py-8">
         <div class="container px-6 ">
-            <!-- Page Header -->
+            <!-- Header section untuk shopping cart -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
                 <p class="text-gray-600">Select items to include in your order</p>
             </div>
 
-            <!-- Empty Cart Message -->
+            <!-- Pesan ketika keranjang kosong -->
             <div id="empty-cart" class="hidden flex flex-col items-center text-gray-600 mt-10">
                 <img src="https://res.cloudinary.com/dxf64h9fe/image/upload/v1760363284/cart_1_hr8ag9.png" class="w-16 h-16 mb-4" alt="empty">
                 <p class="text-lg font-medium">Your cart is empty</p>

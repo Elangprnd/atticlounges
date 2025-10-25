@@ -1,15 +1,16 @@
-// ===== PRODUCT PAGE FUNCTIONALITY ===== //
+// Fungsi untuk halaman produk
 
 let allProducts = [];
 let filteredProducts = [];
 
-// ===== CART FUNCTIONS ===== //
+// Ambil data keranjang dari localStorage
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
   return JSON.parse(localStorage.getItem(cartKey)) || [];
 }
 
+// Simpan data keranjang ke localStorage
 function saveCart(cart) {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
@@ -17,7 +18,7 @@ function saveCart(cart) {
   updateCartCount();
 }
 
-// Get current user ID from token
+// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;

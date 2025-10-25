@@ -1,35 +1,43 @@
-// AI-powered chat with Groq integration[=]
+// Key untuk menyimpan inbox owner
 const OWNER_INBOX_KEY = 'owner_inbox';
+// URL untuk service AI
 const AI_SERVICE_URL = 'http://localhost:4004/api/chat';
+// Key untuk menyimpan riwayat percakapan
 const CONVERSATION_KEY = 'chat_conversation_history';
 
+// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
+// Ambil pesan di inbox owner
 function getOwnerInbox() {
   return JSON.parse(localStorage.getItem(OWNER_INBOX_KEY) || '[]');
 }
 
+// Simpan pesan ke inbox owner
 function saveOwnerInbox(messages) {
   localStorage.setItem(OWNER_INBOX_KEY, JSON.stringify(messages));
 }
 
+// Ambil riwayat percakapan
 function getConversationHistory() {
   return JSON.parse(localStorage.getItem(CONVERSATION_KEY) || '[]');
 }
 
+// Simpan riwayat percakapan (maksimal 10 pesan terakhir)
 function saveConversationHistory(history) {
-  // Keep only last 10 messages to avoid token limit
   const limitedHistory = history.slice(-10);
   localStorage.setItem(CONVERSATION_KEY, JSON.stringify(limitedHistory));
 }
 
+// Kirim pesan ke AI dan ambil jawaban
 async function getAIResponse(message) {
   try {
     const conversationHistory = getConversationHistory();
     
+    // Kirim request ke service AI
     const response = await fetch(AI_SERVICE_URL, {
       method: 'POST',
       headers: {
@@ -53,6 +61,7 @@ async function getAIResponse(message) {
   }
 }
 
+// Tambahkan pesan ke chat area
 function appendMessage(el, message, sender) {
   const wrapper = document.createElement('div');
   wrapper.className = 'flex mb-4 gap-2.5 ' + (sender === 'user' ? 'justify-end' : 'justify-start');
@@ -88,11 +97,14 @@ function appendMessage(el, message, sender) {
   el.scrollTop = el.scrollHeight;
 }
 
+// Jalankan kode pas halaman udah loaded
 document.addEventListener('DOMContentLoaded', () => {
+  // Ambil elemen yang dibutuhkan
   const chatMessages = document.getElementById('chat-messages');
   const userInput = document.getElementById('user-input');
   const sendButton = document.getElementById('send-button');
 
+  // Fungsi untuk handle kirim pesan
   async function handleSend() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -100,11 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const userId = getCurrentUserId() || 'guest';
     const msg = { from: userId, text, ts: Date.now(), to: 'bot' };
     
-    // Add user message to chat
+    // Tampilkan pesan user
     appendMessage(chatMessages, msg, 'user');
     userInput.value = '';
 
-    // Show typing indicator
+    // Tampilkan indikator typing
     const typingIndicator = document.createElement('div');
     typingIndicator.className = 'flex mb-4 gap-2.5 justify-start';
     typingIndicator.innerHTML = `
@@ -127,18 +139,17 @@ document.addEventListener('DOMContentLoaded', () => {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     try {
-      // Get AI response
+      // Coba ambil jawaban dari AI
       const aiResponse = await getAIResponse(text);
       
-      // Remove typing indicator
       typingIndicator.remove();
       
       if (aiResponse) {
-        // AI responded successfully
+        // Kalau AI berhasil jawab, tampilkan jawabannya
         const reply = { from: 'bot', text: aiResponse, ts: Date.now() };
         appendMessage(chatMessages, reply, 'bot');
         
-        // Update conversation history
+        // Simpan ke riwayat percakapan
         const conversationHistory = getConversationHistory();
         conversationHistory.push(
           { role: 'user', content: text },
@@ -146,7 +157,7 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         saveConversationHistory(conversationHistory);
       } else {
-        // Fallback to owner relay if AI fails
+        // Kalau AI gagal, kirim ke inbox owner
         const inbox = getOwnerInbox();
         inbox.push({ ...msg, to: 'owner' });
         saveOwnerInbox(inbox);
@@ -157,16 +168,17 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (error) {
       console.error('Chat error:', error);
       
-      // Remove typing indicator
       typingIndicator.remove();
       
-      // Fallback response
+      // Tampilkan pesan error
       const reply = { from: 'bot', text: 'Maaf, saya sedang mengalami gangguan teknis. Silakan coba lagi nanti atau hubungi kami langsung.', ts: Date.now() };
       appendMessage(chatMessages, reply, 'bot');
     }
   }
 
+  // Event listener untuk tombol kirim
   sendButton?.addEventListener('click', handleSend);
+  // Event listener untuk tombol Enter
   userInput?.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSend();
   });

@@ -1,16 +1,19 @@
-// ===== WISHLIST PAGE =====
+// Fungsi untuk halaman wishlist
 
+// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
+// Ambil data wishlist dari localStorage
 function getWishlist() {
   const userId = getCurrentUserId();
   const key = userId ? `wishlist_${userId}` : 'wishlist_guest';
   return JSON.parse(localStorage.getItem(key) || '[]');
 }
 
+// Simpan data wishlist ke localStorage
 function saveWishlist(list) {
   const userId = getCurrentUserId();
   const key = userId ? `wishlist_${userId}` : 'wishlist_guest';
