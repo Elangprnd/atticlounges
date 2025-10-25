@@ -1,19 +1,16 @@
-// Fungsi untuk halaman wishlist
+// ===== WISHLIST PAGE =====
 
-// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
-// Ambil data wishlist dari localStorage
 function getWishlist() {
   const userId = getCurrentUserId();
   const key = userId ? `wishlist_${userId}` : 'wishlist_guest';
   return JSON.parse(localStorage.getItem(key) || '[]');
 }
 
-// Simpan data wishlist ke localStorage
 function saveWishlist(list) {
   const userId = getCurrentUserId();
   const key = userId ? `wishlist_${userId}` : 'wishlist_guest';
@@ -71,18 +68,18 @@ async function renderWishlist() {
     try {
       const p = await fetchProduct(id);
       const card = document.createElement('div');
-      card.className = 'bg-white rounded-lg shadow-sm border p-4 flex flex-col';
+      card.className = 'bg-white rounded-xl shadow-md p-6 flex flex-col';
       const imageUrl = p.image || 'https://via.placeholder.com/400x300?text=No+Image';
       card.innerHTML = `
-        <div class="aspect-[4/3] bg-gray-100 rounded-md overflow-hidden mb-3 flex items-center justify-center">
+        <div class="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4 flex items-center justify-center">
           <img src="${imageUrl}" alt="${p.name}" class="w-full h-full object-cover">
         </div>
         <div class="text-xs uppercase text-gray-500 mb-1">${typeof p.category === 'string' ? p.category : (p.category?.name || '')}</div>
         <div class="font-semibold text-gray-900 line-clamp-1">${p.name}</div>
         <div class="text-[#93392C] font-semibold mt-1 mb-3">${formatRupiah(p.price)}</div>
         <div class="mt-auto grid grid-cols-3 gap-2">
-          <button class="view-detail px-3 py-2 text-xs border rounded hover:bg-gray-50" data-id="${id}">Detail</button>
-          <button class="to-cart px-3 py-2 text-xs bg-gray-800 text-white rounded hover:bg-gray-900" data-id="${id}">Add to Cart</button>
+          <button class="view-detail px-3 py-2 text-xs border border-gray-300 text-[#364153] rounded hover:bg-gray-50" data-id="${id}">View Details</button>
+          <button class="to-cart px-3 py-2 text-xs bg-[#DC9C84] text-white rounded hover:bg-[#93392C]" data-id="${id}">Add to Cart</button>
           <button class="remove-wish px-3 py-2 text-xs border border-red-300 text-red-600 rounded hover:bg-red-50" data-id="${id}">Remove</button>
         </div>
       `;

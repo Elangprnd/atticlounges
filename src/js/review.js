@@ -1,24 +1,24 @@
-// Fungsi untuk sistem review
+// ===== REVIEW SYSTEM ===== //
 
 let currentOrder = null;
 let currentRating = 0;
 
-// Jalankan kode pas halaman udah loaded
+// ===== INITIALIZATION ===== //
 document.addEventListener('DOMContentLoaded', async () => {
-    // Ambil order ID dari URL parameter
+    // Get order ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
     const orderId = urlParams.get('review');
     
     if (orderId) {
-        // Load info order dan tampilkan modal review
+        // Load order info and show review modal
         await loadOrderInfo(orderId);
         showReviewModal();
     }
     
-    // Setup event listener
+    // Setup event listeners
     setupReviewEventListeners();
     
-    // Render review yang udah ada di homepage
+    // Render existing reviews on homepage
     renderReviewsOnHomepage();
 });
 
@@ -412,8 +412,8 @@ function renderReviewsOnHomepage() {
                 ${review.items[0]?.name || 'Product'}
             </div>
             ${review.reviewPhoto ? `
-                <div class="mb-3 w-full bg-gray-100 rounded-lg overflow-hidden" style="height: 192px; width: 100%; display: block;">
-                    <img src="${review.reviewPhoto}" alt="Review photo" style="width: 100%; height: 192px; object-fit: cover; object-position: center; display: block;">
+                <div class="mb-3 aspect-square bg-gray-100 rounded-lg overflow-hidden">
+                    <img src="${review.reviewPhoto}" alt="Review photo" class="w-full h-full object-cover">
                 </div>
             ` : ''}
             <p class="text-gray-600 text-sm">${review.review}</p>

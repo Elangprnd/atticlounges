@@ -1,13 +1,13 @@
-// Fungsi untuk halaman pesanan
+// ===== ORDERS PAGE FUNCTIONALITY ===== //
 
-// Ambil data keranjang dari localStorage
+// ===== CART FUNCTIONS ===== //
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
   return JSON.parse(localStorage.getItem(cartKey)) || [];
 }
 
-// Ambil ID user yang sedang login
+// Get current user ID from token
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
@@ -26,6 +26,28 @@ function updateCartCount() {
       countEl.classList.add('hidden');
     }
   });
+}
+
+// ===== STATUS COLOR HELPER ===== //
+function getStatusColor(status) {
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'text-yellow-600 bg-yellow-100';
+    case 'processing':
+      return 'text-blue-600 bg-blue-100';
+    case 'shipped':
+      return 'text-purple-600 bg-purple-100';
+    case 'delivered':
+    case 'completed':
+      return 'text-green-600 bg-green-100';
+    case 'cancelled':
+    case 'canceled':
+      return 'text-red-600 bg-red-100';
+    case 'refunded':
+      return 'text-orange-600 bg-orange-100';
+    default:
+      return 'text-gray-600 bg-gray-100';
+  }
 }
 
 // ===== RENDER ORDERS ===== //
@@ -86,7 +108,7 @@ async function renderOrders() {
     orderDiv.innerHTML = `
       <div class="flex justify-between items-center mb-4 border-b pb-3">
         <h3 class="text-xl font-semibold text-gray-800">Order ID: ${order.orderId}</h3>
-        <span class="text-sm font-medium ${order.status === 'pending' ? 'text-yellow-600 bg-yellow-100' : 'text-green-600 bg-green-100'} px-3 py-1 rounded-full">
+        <span class="text-sm font-medium ${getStatusColor(order.status)} px-3 py-1 rounded-full">
           ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
         </span>
       </div>

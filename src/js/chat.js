@@ -1,43 +1,33 @@
-// Key untuk menyimpan inbox owner
 const OWNER_INBOX_KEY = 'owner_inbox';
-// URL untuk service AI
 const AI_SERVICE_URL = 'http://localhost:4004/api/chat';
-// Key untuk menyimpan riwayat percakapan
 const CONVERSATION_KEY = 'chat_conversation_history';
 
-// Ambil ID user yang sedang login
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
-// Ambil pesan di inbox owner
 function getOwnerInbox() {
   return JSON.parse(localStorage.getItem(OWNER_INBOX_KEY) || '[]');
 }
 
-// Simpan pesan ke inbox owner
 function saveOwnerInbox(messages) {
   localStorage.setItem(OWNER_INBOX_KEY, JSON.stringify(messages));
 }
 
-// Ambil riwayat percakapan
 function getConversationHistory() {
   return JSON.parse(localStorage.getItem(CONVERSATION_KEY) || '[]');
 }
 
-// Simpan riwayat percakapan (maksimal 10 pesan terakhir)
 function saveConversationHistory(history) {
   const limitedHistory = history.slice(-10);
   localStorage.setItem(CONVERSATION_KEY, JSON.stringify(limitedHistory));
 }
 
-// Kirim pesan ke AI dan ambil jawaban
 async function getAIResponse(message) {
   try {
     const conversationHistory = getConversationHistory();
     
-    // Kirim request ke service AI
     const response = await fetch(AI_SERVICE_URL, {
       method: 'POST',
       headers: {
@@ -61,10 +51,9 @@ async function getAIResponse(message) {
   }
 }
 
-// Tambahkan pesan ke chat area
 function appendMessage(el, message, sender) {
   const wrapper = document.createElement('div');
-  wrapper.className = 'flex mb-4 gap-2.5 ' + (sender === 'user' ? 'justify-end' : 'justify-start');
+  wrapper.className = 'flex mb-8 gap-2.5 ' + (sender === 'user' ? 'justify-end' : 'justify-start');
   const time = new Date(message.ts).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
   if (sender === 'user') {
     wrapper.innerHTML = `
@@ -73,7 +62,7 @@ function appendMessage(el, message, sender) {
           <span class="text-sm font-semibold text-gray-900">Anda</span>
           <span class="text-sm font-normal text-gray-500">${time}</span>
         </div>
-        <div class="flex flex-col leading-1.5 p-4 bg-black text-white rounded-s-xl rounded-ee-xl">
+        <div class="flex flex-col leading-1.5 p-4 bg-[#DC9C84] text-white rounded-s-xl rounded-ee-xl">
           <p class="text-sm font-normal">${message.text}</p>
         </div>
       </div>
@@ -94,17 +83,28 @@ function appendMessage(el, message, sender) {
     `;
   }
   el.appendChild(wrapper);
-  el.scrollTop = el.scrollHeight;
+  // Smooth scroll to bottom
+  setTimeout(() => {
+    el.scrollTo({
+      top: el.scrollHeight,
+      behavior: 'smooth'
+    });
+  }, 100);
 }
 
-// Jalankan kode pas halaman udah loaded
 document.addEventListener('DOMContentLoaded', () => {
-  // Ambil elemen yang dibutuhkan
   const chatMessages = document.getElementById('chat-messages');
   const userInput = document.getElementById('user-input');
   const sendButton = document.getElementById('send-button');
 
-  // Fungsi untuk handle kirim pesan
+  // Add welcome message
+  const welcomeMessage = {
+    from: 'bot',
+    text: 'Halo! Saya Atticbot, asisten virtual Attic Lounges. Saya siap membantu Anda dengan pertanyaan tentang produk, layanan, atau informasi lainnya. Ada yang bisa saya bantu?',
+    ts: Date.now()
+  };
+  appendMessage(chatMessages, welcomeMessage, 'bot');
+
   async function handleSend() {
     const text = userInput.value.trim();
     if (!text) return;
@@ -112,13 +112,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const userId = getCurrentUserId() || 'guest';
     const msg = { from: userId, text, ts: Date.now(), to: 'bot' };
     
-    // Tampilkan pesan user
     appendMessage(chatMessages, msg, 'user');
     userInput.value = '';
 
-    // Tampilkan indikator typing
     const typingIndicator = document.createElement('div');
-    typingIndicator.className = 'flex mb-4 gap-2.5 justify-start';
+    typingIndicator.className = 'flex mb-8 gap-2.5 justify-start';
     typingIndicator.innerHTML = `
       <img class="w-8 h-8 rounded-full" src="https://cdn-icons-png.flaticon.com/128/6134/6134447.png" alt="Atticbot Avatar">
       <div class="flex flex-col gap-1 w-full max-w-xs">
@@ -136,20 +134,23 @@ document.addEventListener('DOMContentLoaded', () => {
       </div>
     `;
     chatMessages.appendChild(typingIndicator);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
+    // Smooth scroll to bottom
+    setTimeout(() => {
+      chatMessages.scrollTo({
+        top: chatMessages.scrollHeight,
+        behavior: 'smooth'
+      });
+    }, 100);
 
     try {
-      // Coba ambil jawaban dari AI
       const aiResponse = await getAIResponse(text);
       
       typingIndicator.remove();
       
       if (aiResponse) {
-        // Kalau AI berhasil jawab, tampilkan jawabannya
         const reply = { from: 'bot', text: aiResponse, ts: Date.now() };
         appendMessage(chatMessages, reply, 'bot');
         
-        // Simpan ke riwayat percakapan
         const conversationHistory = getConversationHistory();
         conversationHistory.push(
           { role: 'user', content: text },
@@ -157,7 +158,6 @@ document.addEventListener('DOMContentLoaded', () => {
         );
         saveConversationHistory(conversationHistory);
       } else {
-        // Kalau AI gagal, kirim ke inbox owner
         const inbox = getOwnerInbox();
         inbox.push({ ...msg, to: 'owner' });
         saveOwnerInbox(inbox);
@@ -170,15 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
       
       typingIndicator.remove();
       
-      // Tampilkan pesan error
       const reply = { from: 'bot', text: 'Maaf, saya sedang mengalami gangguan teknis. Silakan coba lagi nanti atau hubungi kami langsung.', ts: Date.now() };
       appendMessage(chatMessages, reply, 'bot');
     }
   }
 
-  // Event listener untuk tombol kirim
   sendButton?.addEventListener('click', handleSend);
-  // Event listener untuk tombol Enter
   userInput?.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSend();
   });

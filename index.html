@@ -1,35 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags untuk responsive dan charset -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Attic Lounges</title>
-    
-    <!-- Google Fonts untuk typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Josefin+Sans:ital,wght@0,100..700;1,100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS files untuk styling -->
     <link href="src/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="src/css/style.css">
 </head>
 
 <body>
     
-    <!-- Navigation Bar untuk header utama --> 
+    <!-- Navigation Bar --> 
     <header id="mainHeader" class="fixed top-0 left-0 w-full z-50 bg-white/60 backdrop-blur-md shadow-sm border-b border-gray-200">
         <nav class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
 
-            <!-- Logo di sebelah kiri -->
+            <!-- Kiri: Logo -->
             <div class="flex items-center gap-2">
             <img id="logo" src="src/img/Attic Lounges.png" alt="AtticLounges logo" class="h-8 w-auto md:h-10 object-contain" />
             </div>
 
-            <!-- Menu navigasi di tengah -->
+            <!-- Tengah: Navigation Links -->
             <ul class="hidden md:flex items-center justify-center gap-8 font-medium text-[18px] text-gray-700">
                 <li><a href="#hero-section" class="hover:text-gray-900 transition-colors duration-200">HOME</a></li>
                 <li><a href="pages/product.html" class="hover:text-gray-900 transition-colors duration-200">PRODUCT</a></li>
@@ -256,32 +251,32 @@
             <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
                 <h2 class="text-3xl font-bold mb-10 text-center">SHOP BY CATEGORY</h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                    <div class="relative group" onclick="navigateToCategory('Clothing')">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Fashion'">
                         <img src="https://i.pinimg.com/1200x/ea/0a/13/ea0a13bdc7d5ba10d3801bd95e866768.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
-                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Clothing</p>
+                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Fashion</p>
                     </div>
-                    <div class="relative group" onclick="navigateToCategory('Shoes')">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?price=under&max=100000'">
                         <img src="https://i.pinimg.com/1200x/ea/45/53/ea4553b1c84c843b6b2f5866709e240e.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
-                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Shoes</p>
+                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Under Rp 100.000</p>
                     </div>
-                    <div class="relative group" onclick="navigateToCategory('Bag')">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Buku'">
                         <img src="https://i.pinimg.com/736x/c1/33/84/c133840fdd97ea03cb903d4928c17faf.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
-                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Bags</p> 
+                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Books</p> 
                     </div>
-                    <div class="relative group" onclick="navigateToCategory('Accessories')">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Accessories'">
                         <img src="https://i.pinimg.com/1200x/fa/b8/cd/fab8cdfc5af40c894dff84544e6f9dfa.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Accessories</p>
                     </div>
-                    <div class="relative group" onclick="navigateToCategory('Lifestyle')">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?price=above&min=300000'">
                         <img src="https://i.pinimg.com/1200x/af/c2/8c/afc28cb871c7134bfd23578b3489db90.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
-                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Lifestyle</p>
+                        <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Above Rp 300.000</p>
                     </div>
-                    <div class="relative group" onclick="navigateToCategory('Electronic')">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Elektronik'">
                         <img src="https://i.pinimg.com/736x/54/3f/d0/543fd0eab594c0d0da8aea6580d7a24f.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Electronics</p>

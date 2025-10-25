@@ -1,30 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags untuk responsive dan charset -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile - Attic Lounges</title>
-    
-    <!-- Google Fonts untuk typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS files untuk styling -->
     <link href="../src/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body class="bg-gray-50">
-    <!-- Header yang di-inject otomatis oleh src/js/header.js -->
+    <!-- Unified header injected by src/js/header.js -->
 
-    <!-- Main Content untuk profile -->
+    <!-- Main Content -->
     <main class="min-h-screen py-8">
         <div class="max-w-5xl mx-auto px-6">
             <h1 class="text-3xl font-bold text-gray-800 mb-8">My Profile</h1>
-            <!-- Card untuk profile information -->
             <div class="bg-white rounded-xl shadow-sm p-6 space-y-6">
-                <!-- User info section -->
                 <div class="flex items-center space-x-4">
                     <img src="https://res.cloudinary.com/dxf64h9fe/image/upload/v1760354998/download_13_z7b0lk.jpg" alt="User Avatar" class="w-24 h-24 rounded-full object-cover border-2 border-[#DC9C84]">
                     <div>
@@ -37,7 +30,6 @@
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800">Account Details</h3>
                         <p class="text-gray-700">Member Since: <span id="member-since">N/A</span></p>
-                        <p class="text-gray-700">Total Orders: <span id="total-orders">0</span></p>
                     </div>
                 </div>
             </div>
@@ -89,17 +81,6 @@
                             <button type="submit" class="bg-[#DC9C84] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#93392C] transition">Simpan Perubahan</button>
                         </div>
                     </form>
-                </div>
-            </div>
-            <!-- Owner Inbox (visible for owner only) -->
-            <div id="owner-inbox" class="bg-white rounded-xl shadow-sm p-6 mt-8 hidden">
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-semibold text-gray-900">Incoming Chats</h2>
-                    <button id="clear-owner-inbox" class="text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">Clear</button>
-                </div>
-                <div id="owner-inbox-list" class="space-y-3"></div>
-                <div class="mt-4 text-right">
-                    <a href="chat.html" class="text-sm text-[#DC9C84] hover:underline">Open Chat</a>
                 </div>
             </div>
 

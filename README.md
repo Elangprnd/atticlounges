@@ -32,6 +32,7 @@ Website thrift store modern dengan sistem **owner-only product management** dan 
 - **Node.js** 16+ ([Download](https://nodejs.org/))
 - **MongoDB** ([Download](https://www.mongodb.com/try/download/community))
 - **Groq API Key** ([Get Free](https://console.groq.com/))
+- **VS Code** dengan Live Server extension
 
 ### Installation & Setup
 
@@ -55,20 +56,67 @@ PORT=4004
 ```
 
 #### 3. Start All Services
-```bash
-# Windows
-.\start.bat
 
-# Manual start
-npm run start:user    # Port 4001
-npm run start:product # Port 4002  
-npm run start:order   # Port 4003
-npm run start:ai      # Port 4004
+##### 🖥️ **Cara 1: Menggunakan start.bat (Recommended)**
+```bash
+# Buka Command Prompt atau PowerShell di root project
+# Jalankan:
+.\start.bat
 ```
 
-#### 4. Open Website
-- Buka `index.html` di browser
-- Atau gunakan Live Server di VS Code
+##### 🔧 **Cara 2: Manual Start (VS Code Terminal)**
+```bash
+# Buka 4 terminal terpisah di VS Code:
+
+# Terminal 1 - User Service
+cd services/user-service
+npm start
+
+# Terminal 2 - Product Service  
+cd services/product-service
+npm start
+
+# Terminal 3 - Order Service
+cd services/order-service
+npm start
+
+# Terminal 4 - AI Service
+cd services/ai-service
+npm start
+```
+
+##### 🚀 **Cara 3: PowerShell Background (Advanced)**
+```powershell
+# Jalankan di PowerShell sebagai background processes
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\path\to\atticlounges\services\user-service'; npm start" -WindowStyle Hidden
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\path\to\atticlounges\services\product-service'; npm start" -WindowStyle Hidden
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\path\to\atticlounges\services\order-service'; npm start" -WindowStyle Hidden
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\path\to\atticlounges\services\ai-service'; npm start" -WindowStyle Hidden
+```
+
+#### 4. Open Website di VS Code
+
+##### 🌐 **Menggunakan Live Server Extension**
+1. Install **Live Server** extension di VS Code
+2. Klik kanan pada `index.html`
+3. Pilih **"Open with Live Server"**
+4. Website akan terbuka di `http://127.0.0.1:5500`
+
+##### 📁 **Menggunakan File Explorer**
+1. Buka `index.html` di browser
+2. Atau drag & drop `index.html` ke browser
+
+#### 5. Verify Services Running
+```bash
+# Cek apakah semua services berjalan
+netstat -ano | findstr ":400[1-4]"
+
+# Atau cek di browser:
+# http://localhost:4001 (User Service)
+# http://localhost:4002 (Product Service)  
+# http://localhost:4003 (Order Service)
+# http://localhost:4004 (AI Service)
+```
 
 ## 🏗️ Architecture
 
@@ -204,6 +252,156 @@ mongosh --eval "show dbs"
 - Cek browser console untuk errors
 - Test API: `curl http://localhost:4004/api/health`
 
+## 🛠️ VS Code Setup & Development
+
+### 📋 **VS Code Extensions Required**
+1. **Live Server** - Untuk menjalankan website
+2. **JavaScript (ES6) code snippets** - Code completion
+3. **Prettier** - Code formatting
+4. **Auto Rename Tag** - HTML editing
+5. **Bracket Pair Colorizer** - Code readability
+
+### 🚀 **VS Code Workflow**
+
+#### **Step 1: Setup Project**
+```bash
+# 1. Clone project
+git clone <repository-url>
+cd atticlounges
+
+# 2. Install dependencies
+npm run install-all
+```
+
+#### **Step 2: Start Services**
+```bash
+# Buka 4 terminal di VS Code (Ctrl+Shift+` untuk new terminal)
+
+# Terminal 1: User Service
+cd services/user-service
+npm start
+
+# Terminal 2: Product Service  
+cd services/product-service
+npm start
+
+# Terminal 3: Order Service
+cd services/order-service
+npm start
+
+# Terminal 4: AI Service
+cd services/ai-service
+npm start
+```
+
+#### **Step 3: Open Website**
+1. Klik kanan pada `index.html`
+2. Pilih **"Open with Live Server"**
+3. Website akan terbuka di `http://127.0.0.1:5500`
+
+### 🔧 **VS Code Terminal Commands**
+
+#### **Start All Services (PowerShell)**
+```powershell
+# Jalankan di VS Code Terminal (PowerShell)
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges\services\user-service'; npm start" -WindowStyle Hidden
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges\services\product-service'; npm start" -WindowStyle Hidden
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges\services\order-service'; npm start" -WindowStyle Hidden
+Start-Process powershell -ArgumentList "-Command", "cd 'C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges\services\ai-service'; npm start" -WindowStyle Hidden
+```
+
+#### **Stop All Services**
+```powershell
+# Matikan semua Node.js processes
+tasklist | findstr node
+taskkill /F /PID <process_id>
+```
+
+### 🐛 **VS Code Debugging**
+
+#### **Check Services Status**
+```bash
+# Cek apakah services berjalan
+netstat -ano | findstr ":400[1-4]"
+
+# Cek Node.js processes
+tasklist | findstr node
+```
+
+#### **Common VS Code Issues**
+
+##### **❌ "Cannot find module" Error**
+```bash
+# Pastikan berada di direktori yang benar
+pwd
+# Harus: C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges
+
+# Jika salah, navigasi ke direktori benar
+cd "C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges"
+```
+
+##### **❌ "Path not found" Error**
+```bash
+# Gunakan path lengkap dengan quotes
+cd "C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges\services\user-service"
+```
+
+##### **❌ PowerShell "&&" Error**
+```powershell
+# PowerShell tidak support && operator
+# Gunakan ; sebagai separator
+cd services\user-service; npm start
+
+# Atau gunakan cmd
+cmd /c "cd services\user-service && npm start"
+```
+
+### 📁 **VS Code Project Structure**
+```
+atticlounges/
+├── index.html              # Main website
+├── pages/                  # Website pages
+├── services/               # Backend services
+│   ├── user-service/       # Port 4001
+│   ├── product-service/    # Port 4002
+│   ├── order-service/      # Port 4003
+│   └── ai-service/         # Port 4004
+├── src/                    # Frontend assets
+│   ├── css/
+│   ├── js/
+│   └── img/
+└── start.bat              # Windows startup script
+```
+
+### 🎯 **Quick VS Code Commands**
+
+#### **Start Everything**
+```bash
+# Method 1: Use start.bat
+.\start.bat
+
+# Method 2: Manual (4 terminals)
+# Terminal 1: cd services/user-service && npm start
+# Terminal 2: cd services/product-service && npm start  
+# Terminal 3: cd services/order-service && npm start
+# Terminal 4: cd services/ai-service && npm start
+```
+
+#### **Stop Everything**
+```bash
+# Kill all Node.js processes
+taskkill /F /IM node.exe
+```
+
+#### **Check Status**
+```bash
+# Check services
+netstat -ano | findstr ":400[1-4]"
+
+# Check processes
+tasklist | findstr node
+```
+
 ## 📊 Database Structure
 
 ### User Service Database
@@ -275,6 +473,195 @@ mongosh --eval "show dbs"
 3. Isi form "Buat Akun Owner"
 4. Login sebagai owner
 5. Akses admin panel untuk manage products
+
+## 🎯 **VS Code Development Workflow**
+
+### 🚀 **Quick Start di VS Code**
+
+#### **1. Setup Project**
+```bash
+# 1. Buka VS Code di project folder
+code .
+
+# 2. Install dependencies (jika belum)
+npm run install-all
+```
+
+#### **2. Start Services (4 Terminal)**
+```bash
+# Terminal 1: User Service (Port 4001)
+cd services/user-service
+npm start
+
+# Terminal 2: Product Service (Port 4002)  
+cd services/product-service
+npm start
+
+# Terminal 3: Order Service (Port 4003)
+cd services/order-service
+npm start
+
+# Terminal 4: AI Service (Port 4004)
+cd services/ai-service
+npm start
+```
+
+#### **3. Open Website**
+```bash
+# Klik kanan index.html → "Open with Live Server"
+# Atau buka di browser: http://127.0.0.1:5500
+```
+
+### 🔧 **VS Code Development Tips**
+
+#### **Multi-Terminal Setup**
+```bash
+# VS Code: Ctrl+Shift+` (new terminal)
+# Atau: Terminal → New Terminal
+
+# Split terminal: Ctrl+Shift+5
+# Atau: Terminal → Split Terminal
+```
+
+#### **Quick Commands**
+```bash
+# Check services status
+netstat -ano | findstr ":400[1-4]"
+
+# Stop all services
+taskkill /F /IM node.exe
+
+# Start all services (PowerShell)
+.\start.bat
+```
+
+#### **Debugging di VS Code**
+```bash
+# 1. Check console errors di browser (F12)
+# 2. Check terminal output untuk service errors
+# 3. Check network tab untuk API calls
+# 4. Verify services running:
+netstat -ano | findstr ":400[1-4]"
+```
+
+### 📁 **VS Code File Organization**
+
+#### **Key Files to Edit**
+```
+atticlounges/
+├── index.html                 # Main homepage
+├── pages/                    # All website pages
+│   ├── product.html          # Product listing
+│   ├── detail.html           # Product details
+│   ├── cart.html             # Shopping cart
+│   ├── admin.html            # Admin panel
+│   └── chat.html             # AI chat
+├── src/js/                   # Frontend JavaScript
+│   ├── app.js                # Main app logic
+│   ├── product.js            # Product management
+│   ├── cart.js               # Cart functionality
+│   └── chat.js                # AI chat integration
+└── services/                 # Backend services
+    ├── user-service/src/      # User authentication
+    ├── product-service/src/   # Product CRUD
+    ├── order-service/src/     # Order management
+    └── ai-service/src/        # AI chat service
+```
+
+#### **VS Code Workspace Settings**
+```json
+{
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/.git": true
+  },
+  "search.exclude": {
+    "**/node_modules": true
+  }
+}
+```
+
+### 🐛 **Common VS Code Issues & Solutions**
+
+#### **❌ Services Won't Start**
+```bash
+# Problem: "Cannot find module" error
+# Solution: Check current directory
+pwd
+# Should be: C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges
+
+# If wrong, navigate to correct directory:
+cd "C:\Users\elang\OneDrive\Dokumen\Sistem Informasi\KSM Multimedia - Web Development\atticlounges"
+```
+
+#### **❌ PowerShell "&&" Error**
+```bash
+# Problem: PowerShell doesn't support && operator
+# Solution: Use semicolon or cmd
+cd services\user-service; npm start
+# Or: cmd /c "cd services\user-service && npm start"
+```
+
+#### **❌ Port Already in Use**
+```bash
+# Problem: Port 4001-4004 already in use
+# Solution: Kill existing processes
+tasklist | findstr node
+taskkill /F /PID <process_id>
+```
+
+#### **❌ Live Server Not Working**
+```bash
+# Problem: Live Server extension issues
+# Solution: 
+# 1. Install Live Server extension
+# 2. Right-click index.html → "Open with Live Server"
+# 3. Or use: http://127.0.0.1:5500
+```
+
+### 🎯 **VS Code Productivity Tips**
+
+#### **Keyboard Shortcuts**
+```bash
+Ctrl+Shift+`     # New terminal
+Ctrl+`           # Toggle terminal
+Ctrl+Shift+5     # Split terminal
+F5               # Start debugging
+Ctrl+F5          # Run without debugging
+```
+
+#### **Extensions for Better Development**
+```bash
+# Essential Extensions:
+- Live Server
+- JavaScript (ES6) code snippets  
+- Prettier - Code formatter
+- Auto Rename Tag
+- Bracket Pair Colorizer
+- GitLens
+- Thunder Client (API testing)
+```
+
+#### **VS Code Tasks (tasks.json)**
+```json
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start All Services",
+      "type": "shell",
+      "command": "start.bat",
+      "group": "build"
+    },
+    {
+      "label": "Stop All Services", 
+      "type": "shell",
+      "command": "taskkill /F /IM node.exe",
+      "group": "build"
+    }
+  ]
+}
+```
 
 ## 📝 License
 

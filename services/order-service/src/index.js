@@ -1,19 +1,15 @@
-// Import dependencies yang dibutuhkan
 import express from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 
-// Setup Express app
 const app = express()
 app.use(cors())
 app.use(express.json())
 
-// Konfigurasi port dan database
 const PORT = process.env.PORT || 4003
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/order_service'
 
-// Schema untuk item di keranjang
 const cartItemSchema = new mongoose.Schema({
   productId: String,
   name: String,
@@ -22,7 +18,6 @@ const cartItemSchema = new mongoose.Schema({
   imageUrl: String
 }, { _id: false })
 
-// Schema untuk model Order
 const orderSchema = new mongoose.Schema({
   userId: String,
   items: [cartItemSchema],

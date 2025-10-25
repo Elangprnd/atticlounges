@@ -1,12 +1,11 @@
-// Fungsi untuk halaman profil
+// ===== PROFILE PAGE FUNCTIONALITY ===== //
 
-// Ambil ID user yang sedang login
+// ===== CART FUNCTIONS ===== //
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
-// Ambil data keranjang dari localStorage
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
@@ -72,52 +71,7 @@ async function renderProfile() {
   if (emailEl) emailEl.value = user.email || '';
   if (birthEl && user.birthDate) birthEl.value = user.birthDate;
 
-  // Get total orders
-  let orders = [];
-  try {
-    const token = localStorage.getItem('token');
-    const response = await fetch('http://localhost:4003/api/orders', {
-      headers: {
-        ...(token && { 'Authorization': `Bearer ${token}` })
-      }
-    });
 
-    if (response.ok) {
-      orders = await response.json();
-    } else {
-      orders = JSON.parse(localStorage.getItem('orders')) || [];
-    }
-  } catch (error) {
-    orders = JSON.parse(localStorage.getItem('orders')) || [];
-  }
-  
-  document.getElementById('total-orders').textContent = orders.length;
-
-  // Owner inbox
-  const ownerBox = document.getElementById('owner-inbox');
-  const ownerList = document.getElementById('owner-inbox-list');
-  const clearBtn = document.getElementById('clear-owner-inbox');
-  if (user.role === 'owner' && ownerBox && ownerList) {
-    ownerBox.classList.remove('hidden');
-    const inbox = JSON.parse(localStorage.getItem('owner_inbox') || '[]');
-    if (inbox.length === 0) {
-      ownerList.innerHTML = '<p class="text-sm text-gray-500">No incoming chats.</p>';
-    } else {
-      ownerList.innerHTML = inbox.slice(-10).reverse().map(m => `
-        <div class="flex items-start gap-3 p-3 rounded-md border border-gray-100">
-          <img class="w-8 h-8 rounded-full" src="https://cdn-icons-png.flaticon.com/128/1077/1077012.png" alt="User">
-          <div class="flex-1">
-            <div class="text-sm text-gray-700"><span class="font-medium">${m.from}</span> <span class="text-gray-400">• ${new Date(m.ts).toLocaleString()}</span></div>
-            <div class="text-sm text-gray-900">${m.text}</div>
-          </div>
-        </div>
-      `).join('');
-    }
-    clearBtn?.addEventListener('click', () => {
-      localStorage.removeItem('owner_inbox');
-      ownerList.innerHTML = '<p class="text-sm text-gray-500">Inbox cleared.</p>';
-    });
-  }
 }
 
 // ===== INITIALIZE PROFILE PAGE ===== //

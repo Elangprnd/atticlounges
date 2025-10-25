@@ -1,38 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags untuk responsive dan charset -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel - Attic Lounges</title>
-    
-    <!-- Google Fonts untuk typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Passion+One:wght@400;700;900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- CSS files untuk styling -->
     <link href="../src/css/output.css" rel="stylesheet">
     <link rel="stylesheet" href="../src/css/style.css">
 </head>
 
 <body>
-    <!-- Header yang di-inject otomatis oleh src/js/header.js -->
+    <!-- Unified header injected by src/js/header.js -->
 
     <main class="min-h-screen bg-gray-50 py-8">
         <div class="container mx-auto px-6 max-w-7xl">
-            <!-- Header section untuk admin panel -->
+            <!-- Header -->
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900 mb-2">Admin Panel</h1>
                 <p class="text-gray-600">Kelola produk dan pengaturan toko</p>
             </div>
 
-            <!-- Cards untuk menampilkan statistik -->
+            <!-- Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                        <div class="p-3 rounded-full bg-[#DC9C84]/20 text-[#DC9C84]">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
@@ -46,7 +41,7 @@
 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-green-100 text-green-600">
+                        <div class="p-3 rounded-full bg-[#93392C]/20 text-[#93392C]">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
                             </svg>
@@ -60,14 +55,14 @@
 
                 <div class="bg-white rounded-lg shadow-md p-6">
                     <div class="flex items-center">
-                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                        <div class="p-3 rounded-full bg-[#8C5E3C]/20 text-[#8C5E3C]">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
                             </svg>
                         </div>
                         <div class="ml-4">
                             <p class="text-sm font-medium text-gray-600">Status Toko</p>
-                            <p class="text-2xl font-semibold text-green-600">Aktif</p>
+                            <p class="text-2xl font-semibold text-[#8C5E3C]">Aktif</p>
                         </div>
                     </div>
                 </div>
@@ -78,12 +73,12 @@
                 <button id="add-product-btn" class="px-6 py-3 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
                     + Tambah Produk
                 </button>
-                <a href="admin-orders.html" class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition">
-                    📦 Kelola Pesanan
+                <a href="admin-orders.html" class="px-6 py-3 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                    </svg>
+                    Kelola Pesanan
                 </a>
-                <button id="refresh-products-btn" class="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white rounded-lg font-medium transition">
-                    🔄 Refresh
-                </button>
             </div>
 
             <!-- Products Table -->

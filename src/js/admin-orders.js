@@ -1,32 +1,23 @@
-// Fungsi untuk admin mengelola pesanan
+// ===== ADMIN ORDER MANAGEMENT ===== //
 const ORDER_SERVICE = 'http://localhost:4003';
 
 let allOrders = [];
 let currentFilter = 'all';
 
-// Jalankan kode pas halaman udah loaded
+// Initialize page
 document.addEventListener('DOMContentLoaded', () => {
     loadOrders();
     setupEventListeners();
 });
 
-// Setup event listener untuk semua tombol
 function setupEventListeners() {
-    // Tombol refresh
-    document.getElementById('refresh-orders-btn').addEventListener('click', loadOrders);
-    
-    // Tombol filter
+    // Filter buttons
     document.getElementById('filter-pending-btn').addEventListener('click', () => {
         currentFilter = 'pending';
         filterOrders();
     });
     
-    document.getElementById('filter-all-btn').addEventListener('click', () => {
-        currentFilter = 'all';
-        filterOrders();
-    });
-    
-    // Modal status
+    // Status modal
     document.getElementById('close-status-modal').addEventListener('click', closeStatusModal);
     document.getElementById('cancel-status').addEventListener('click', closeStatusModal);
     document.getElementById('update-status').addEventListener('click', updateOrderStatus);
@@ -102,27 +93,27 @@ function renderOrdersTable(orders) {
     orders.forEach(order => {
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                 #${order._id.slice(-8)}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                 User ID: ${order.userId.slice(-8)}
             </td>
-            <td class="px-6 py-4 text-sm text-gray-900">
+            <td class="px-6 py-4 text-sm text-gray-900 text-center">
                 ${order.items.length} item(s)
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                 Rp ${order.total.toLocaleString()}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
+            <td class="px-6 py-4 whitespace-nowrap text-center">
                 <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(order.status)}">
                     ${getStatusText(order.status)}
                 </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
                 ${new Date(order.createdAt).toLocaleDateString()}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                 <button onclick="openStatusModal('${order._id}', '${order.status}')" 
                         class="text-[#DC9C84] hover:text-[#93392C] transition">
                     Update Status

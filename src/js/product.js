@@ -1,16 +1,15 @@
-// Fungsi untuk halaman produk
+// ===== PRODUCT PAGE FUNCTIONALITY ===== //
 
 let allProducts = [];
 let filteredProducts = [];
 
-// Ambil data keranjang dari localStorage
+// ===== CART FUNCTIONS ===== //
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
   return JSON.parse(localStorage.getItem(cartKey)) || [];
 }
 
-// Simpan data keranjang ke localStorage
 function saveCart(cart) {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
@@ -18,10 +17,16 @@ function saveCart(cart) {
   updateCartCount();
 }
 
-// Ambil ID user yang sedang login
+// Get current user ID from token
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
+}
+
+// Check if current user is admin
+function isAdmin() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return user.role === 'owner' || localStorage.getItem('isAdmin') === 'true';
 }
 
 function updateCartCount() {
@@ -90,11 +95,15 @@ async function filterProducts() {
 
   // Price filter
   if (priceFilter) {
-    const [min, max] = priceFilter.split('-').map(p => p === '+' ? Infinity : parseInt(p));
-    filtered = filtered.filter(product => {
-      if (max === Infinity) return product.price >= min;
-      return product.price >= min && product.price <= max;
-    });
+    if (priceFilter.includes('+')) {
+      // Handle "300000+" format
+      const min = parseInt(priceFilter.replace('+', ''));
+      filtered = filtered.filter(product => product.price >= min);
+    } else if (priceFilter.includes('-')) {
+      // Handle "0-100000" format
+      const [min, max] = priceFilter.split('-').map(p => parseInt(p));
+      filtered = filtered.filter(product => product.price >= min && product.price <= max);
+    }
   }
 
   // Sort
@@ -152,7 +161,7 @@ function renderProducts(productList) {
     card.className = "group bg-white rounded-lg shadow-md overflow-hidden transition hover:shadow-xl hover:-translate-y-2 relative";
 
     card.innerHTML = `
-      <!-- Wishlist Button -->
+      ${!isAdmin() ? `<!-- Wishlist Button -->
       <button 
         class="wishlist-btn absolute right-4 top-4 z-20 rounded-full bg-white p-1.5 transition-colors shadow-md"
         data-id="${product._id}">
@@ -165,7 +174,7 @@ function renderProducts(productList) {
             -4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 
             7.22 9 12 9 12s9-4.78 9-12z"/>
         </svg>
-      </button>
+      </button>` : ''}
 
       <!-- Product Image -->
       <div class="aspect-square overflow-hidden">
@@ -189,9 +198,9 @@ function renderProducts(productList) {
                   data-id="${product._id}">
             View Details
           </button>
-          <button class="add-to-cart flex-1 text-center rounded-md text-xs py-2 font-medium text-white bg-[#DC9C84] hover:bg-[#93392C] transition" 
+          <button class="add-to-cart flex-1 text-center rounded-md text-xs py-2 font-medium text-white ${isAdmin() ? 'bg-[#8C5E3C] hover:bg-[#382E2A]' : 'bg-[#DC9C84] hover:bg-[#93392C]'} transition" 
                   data-id="${product._id}">
-            Add to Cart
+            ${isAdmin() ? 'Edit' : 'Add to Cart'}
           </button>
         </div>
       </div>
@@ -206,10 +215,18 @@ function renderProducts(productList) {
 
 // ===== ADD EVENT LISTENERS ===== //
 function addProductEventListeners() {
-  // Add to Cart
+  // Add to Cart / Edit
   document.querySelectorAll(".add-to-cart").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const productId = e.currentTarget.dataset.id;
+      
+      // If admin, redirect to admin page
+      if (isAdmin()) {
+        window.location.href = '../pages/admin.html';
+        return;
+      }
+      
+      // If regular user, add to cart
       const product = allProducts.find((p) => p._id === productId);
       
       if (!product) return;
@@ -240,6 +257,12 @@ function addProductEventListeners() {
   // Wishlist toggle
   document.querySelectorAll(".wishlist-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
+      // Block admin from adding to wishlist
+      if (isAdmin()) {
+        alert('Admin tidak bisa menambah produk ke wishlist!');
+        return;
+      }
+      
       const productId = e.currentTarget.dataset.id;
       let wishlist = getWishlist();
 
@@ -309,9 +332,13 @@ async function initializePage() {
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get('search');
   const categoryQuery = urlParams.get('category');
+  const priceQuery = urlParams.get('price');
+  const minPrice = urlParams.get('min');
+  const maxPrice = urlParams.get('max');
   
   await fetchProducts();
 
+  // Handle search query
   if (searchQuery) {
     const searchInputs = document.querySelectorAll('#product-search, #product-search-user');
     searchInputs.forEach(input => {
@@ -319,17 +346,36 @@ async function initializePage() {
     });
     await searchProducts(searchQuery);
     updateResultsInfo(filteredProducts);
-  } else if (categoryQuery) {
-    const categoryFilter = document.getElementById('category-filter');
-    if (categoryFilter) {
-      categoryFilter.value = categoryQuery;
-    }
-    await filterProducts();
-    updateResultsInfo(filteredProducts);
   } else {
-    filteredProducts = [...allProducts];
-    renderProducts(filteredProducts);
-    updateResultsInfo(filteredProducts);
+    // Handle category filter from URL
+    if (categoryQuery) {
+      const categoryFilter = document.getElementById('category-filter');
+      if (categoryFilter) {
+        categoryFilter.value = categoryQuery;
+      }
+    }
+    
+    // Handle price filter from URL
+    if (priceQuery && (minPrice || maxPrice)) {
+      const priceFilter = document.getElementById('price-filter');
+      if (priceFilter) {
+        if (priceQuery === 'under' && maxPrice) {
+          priceFilter.value = `0-${maxPrice}`;
+        } else if (priceQuery === 'above' && minPrice) {
+          priceFilter.value = `${minPrice}+`;
+        }
+      }
+    }
+    
+    // Apply filters if any URL parameters exist
+    if (categoryQuery || (priceQuery && (minPrice || maxPrice))) {
+      await filterProducts();
+      updateResultsInfo(filteredProducts);
+    } else {
+      filteredProducts = [...allProducts];
+      renderProducts(filteredProducts);
+      updateResultsInfo(filteredProducts);
+    }
   }
 
   // Search functionality

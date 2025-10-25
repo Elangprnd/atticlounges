@@ -1,42 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Meta tags untuk responsive dan charset -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Atticlounges Chatbot</title>
-    
-    <!-- CSS files untuk styling -->
     <link href="../src/css/output.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom CSS untuk chat interface -->
     <style>
-        body { font-family: 'Inter', sans-serif; }
-        .chat-container { height: calc(100vh - 8rem); }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .chat-container { 
+            height: calc(100vh - 160px); /* Account for header and input */
+        }
         .guest-mode .user { display: none; }
         .user-mode .guest { display: none; }
+        #chat-messages {
+            padding: 1.5rem;
+            padding-top: 1rem; /* Reduced top padding */
+            padding-bottom: 8rem; /* Increased bottom padding */
+            height: 100%;
+            overflow-y: auto;
+        }
+        .chat-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            padding-bottom: 2rem;
+            z-index: 10;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+        /* Ensure header is fixed */
+        header {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+        }
     </style>
 </head>
-<body class="bg-gray-100 flex flex-col h-screen">
-    <!-- Header yang di-inject otomatis oleh src/js/header.js -->
+<body class="bg-gray-100">
+    <!-- Unified header injected by src/js/header.js -->
 
-    <main class="flex-grow flex flex-col p-4 overflow-hidden relative">
-        <!-- Area untuk menampilkan pesan chat -->
-        <div id="chat-messages" class="flex-grow overflow-y-auto mb-4"></div>
-        
-        <!-- Input area untuk mengetik pesan -->
-        <div class="sticky bottom-0 bg-white p-4 border-t border-gray-200">
-            <div class="flex items-center gap-4 max-w-2xl mx-auto">
-                <input type="text" id="user-input" placeholder="Ketik pesan Anda..." class="flex-grow p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
-                <button id="send-button" class="bg-[#B4AB98] text-white p-3 rounded-full shadow-lg hover:bg-yellow-600 transition-colors">
-                    <svg class="w-6 h-6 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
-                </button>
-            </div>
-        </div>
+    <main class="chat-container flex flex-col">
+        <div id="chat-messages" class="flex-grow overflow-y-auto"></div>
     </main>
+    
+    <!-- Chat Input - Fixed at bottom -->
+    <div class="chat-input-container">
+        <div class="flex items-center gap-4 max-w-4xl mx-auto">
+            <input type="text" id="user-input" placeholder="Ketik pesan Anda..." class="flex-grow p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#DC9C84] focus:border-transparent">
+            <button id="send-button" class="bg-[#DC9C84] text-white p-3 rounded-full shadow-lg hover:bg-[#93392C] transition-colors">
+                <svg class="w-6 h-6 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+            </button>
+        </div>
+    </div>
     <!-- Login Modal -->
     <div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
         <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
@@ -110,6 +139,5 @@
     <script src="../src/js/header.js"></script>
     <script src="../src/js/app.js"></script>
     <script src="../src/js/chat.js"></script>
-    <script src="../src/js/footer.js"></script>
 </body>
 </html>

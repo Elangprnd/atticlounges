@@ -1,29 +1,28 @@
-// Fungsi untuk admin panel
+// ===== ADMIN PANEL FUNCTIONALITY ===== //
 
 let products = [];
 let currentUser = null;
 
-// Jalankan kode pas halaman udah loaded
+// ===== INITIALIZATION ===== //
 document.addEventListener('DOMContentLoaded', async () => {
-    // Cek apakah user login dan punya akses owner
+    // Check if user is logged in and is owner
     await checkOwnerAuth();
     
-    // Load produk dari database
+    // Load products
     await loadProducts();
     
-    // Setup event listener
+    // Setup event listeners
     setupEventListeners();
     
-    // Update statistik
+    // Update stats
     updateStats();
 });
 
-// Cek apakah user punya akses owner
+// ===== AUTHENTICATION ===== //
 async function checkOwnerAuth() {
     const token = localStorage.getItem('token');
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     
-    // Kalau bukan owner, redirect ke homepage
     if (!token || !user || user.role !== 'owner') {
         alert('Akses ditolak. Hanya owner yang bisa mengakses halaman ini.');
         window.location.href = '../index.html';
@@ -76,16 +75,16 @@ function renderProductsTable() {
                     </div>
                 </div>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-[#DC9C84]/20 text-[#DC9C84]">
                     ${product.category}
                 </span>
             </td>
-            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                 Rp ${product.price.toLocaleString('id-ID')}
             </td>
-            <td class="px-6 py-4 whitespace-nowrap">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-[#93392C]/20 text-[#93392C]">
                     ${product.condition}
                 </span>
             </td>
@@ -148,9 +147,6 @@ function setupEventListeners() {
     
     editForm?.addEventListener('submit', handleEditProduct);
     
-    // Refresh Button
-    const refreshBtn = document.getElementById('refresh-products-btn');
-    refreshBtn?.addEventListener('click', loadProducts);
     
     // Logout Button
     const logoutBtn = document.getElementById('logout-btn');

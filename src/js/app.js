@@ -1,10 +1,7 @@
-// URL untuk service backend
 const USER_SERVICE = 'http://localhost:4001';
 const PRODUCT_SERVICE = 'http://localhost:4002';
 
-// Fungsi untuk mengatur modal login
 function loginModal() {
-  // Ambil semua elemen yang dibutuhkan
   const openBtn = document.getElementById("login");
   const closeBtn = document.getElementById("closeModal");
   const modal = document.getElementById("loginModal");
@@ -15,32 +12,26 @@ function loginModal() {
   const adminContent = document.getElementById("admin-login-content");
   const adminForm = document.getElementById("admin-login-form");
 
-  // Cek apakah elemen ada, kalau tidak ada langsung keluar
   if (!openBtn || !closeBtn || !modal) return; 
 
-  // Event listener untuk buka modal
   openBtn.addEventListener("click", () => {
     modal.classList.remove("hidden");
     switchToUserTab();
   });
 
-  // Event listener untuk tutup modal
   closeBtn.addEventListener("click", () => {
     modal.classList.add("hidden");
   });
 
-  // Tutup modal kalau klik di luar area modal
   modal.addEventListener("click", (e) => {
     if (e.target === modal) {
       modal.classList.add("hidden");
     }
   });
 
-  // Event listener untuk ganti tab
   userTab?.addEventListener("click", switchToUserTab);
   adminTab?.addEventListener("click", switchToAdminTab);
 
-  // Fungsi untuk ganti ke tab user
   function switchToUserTab() {
     userTab.classList.add("bg-white", "text-gray-900", "shadow-sm");
     userTab.classList.remove("text-gray-500");
@@ -50,7 +41,6 @@ function loginModal() {
     adminContent.classList.add("hidden");
   }
 
-  // Fungsi untuk ganti ke tab admin
   function switchToAdminTab() {
     adminTab.classList.add("bg-white", "text-gray-900", "shadow-sm");
     adminTab.classList.remove("text-gray-500");
@@ -290,7 +280,18 @@ function toggleHeader(isLoggedIn) {
         
         guestButtons?.classList.add("hidden");
 
-        userButtons?.classList.remove("hidden"); // Tampilkan Cart, Heart, Chat untuk semua logged-in
+        // Cek apakah user adalah admin/owner
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        const isAdminUser = user.role === 'owner' || localStorage.getItem('isAdmin') === 'true';
+        
+        if (isAdminUser) {
+            // Sembunyikan cart, wishlist, chat untuk admin
+            userButtons?.classList.add("hidden");
+        } else {
+            // Tampilkan Cart, Heart, Chat untuk user biasa
+            userButtons?.classList.remove("hidden");
+        }
+        
         handleDropdownRole(); // <-- REFRESH ISI DROPDOWN
     } else {
         // Sembunyikan semua kecuali Guest
@@ -361,21 +362,43 @@ function clearLoginState() {
 
 
 // ====== SEARCH OVERLAY SYSTEM ======
-const searchBtn = document.getElementById("searchBtn");
-const searchOverlay = document.getElementById("searchOverlay");
-const closeSearch = document.getElementById("closeSearch");
+function initializeSearchOverlay() {
+  const searchBtn = document.getElementById("searchBtn");
+  const searchOverlay = document.getElementById("searchOverlay");
+  const closeSearch = document.getElementById("closeSearch");
 
-// Pastikan hanya jalan kalau semua elemen ada
-if (searchBtn && searchOverlay && closeSearch) {
-  searchBtn.addEventListener("click", () => {
+  // Pastikan hanya jalan kalau semua elemen ada
+  if (searchBtn && searchOverlay && closeSearch) {
+    // Remove existing listeners to prevent duplicates
+    searchBtn.removeEventListener("click", handleSearchClick);
+    closeSearch.removeEventListener("click", handleCloseSearch);
+    
+    // Add new listeners
+    searchBtn.addEventListener("click", handleSearchClick);
+    closeSearch.addEventListener("click", handleCloseSearch);
+    
+    console.log('Search overlay initialized successfully');
+  } else {
+    console.log('Search elements not found, retrying...');
+    // Retry after a short delay for dynamically loaded content
+    setTimeout(initializeSearchOverlay, 100);
+  }
+}
+
+function handleSearchClick() {
+  const searchOverlay = document.getElementById("searchOverlay");
+  if (searchOverlay) {
     searchOverlay.classList.remove("hidden");
-    document.body.style.overflow = "hidden"; // biar ga scroll di belakang
-  });
+    document.body.style.overflow = "hidden";
+  }
+}
 
-  closeSearch.addEventListener("click", () => {
+function handleCloseSearch() {
+  const searchOverlay = document.getElementById("searchOverlay");
+  if (searchOverlay) {
     searchOverlay.classList.add("hidden");
     document.body.style.overflow = "auto";
-  });
+  }
 }
 
 // ====== SEARCH FUNCTIONALITY ======
@@ -385,35 +408,44 @@ function initializeSearch() {
 
   // --- Saat user ngetik di search input (live feedback, belum redirect) ---
   searchInputs.forEach((input) => {
-    input.addEventListener("input", (e) => {
-      const query = e.target.value.trim().toLowerCase();
-      if (query.length > 2) {
-        console.log("Searching for:", query);
-        // nanti bisa dikembangin: fetch hasil pencarian real-time
-      }
-    });
+    // Remove existing listeners to prevent duplicates
+    input.removeEventListener("input", handleSearchInput);
+    input.addEventListener("input", handleSearchInput);
   });
 
   // --- Saat user tekan Enter atau submit form ---
   searchForms.forEach((form) => {
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const input = form.querySelector('input[type="search"]');
-      if (input && input.value.trim()) {
-        const searchQuery = encodeURIComponent(input.value.trim());
-        const targetURL = `pages/product.html?search=${searchQuery}`;
-
-        // Tutup overlay (kalau ada)
-        if (searchOverlay) {
-          searchOverlay.classList.add("hidden");
-          document.body.style.overflow = "auto";
-        }
-
-        // Redirect ke halaman product
-        window.location.href = targetURL;
-      }
-    });
+    // Remove existing listeners to prevent duplicates
+    form.removeEventListener("submit", handleSearchSubmit);
+    form.addEventListener("submit", handleSearchSubmit);
   });
+}
+
+function handleSearchInput(e) {
+  const query = e.target.value.trim().toLowerCase();
+  if (query.length > 2) {
+    console.log("Searching for:", query);
+    // nanti bisa dikembangin: fetch hasil pencarian real-time
+  }
+}
+
+function handleSearchSubmit(e) {
+  e.preventDefault();
+  const input = e.target.querySelector('input[type="search"]');
+  if (input && input.value.trim()) {
+    const searchQuery = encodeURIComponent(input.value.trim());
+    const targetURL = `pages/product.html?search=${searchQuery}`;
+
+    // Tutup overlay (kalau ada)
+    const searchOverlay = document.getElementById("searchOverlay");
+    if (searchOverlay) {
+      searchOverlay.classList.add("hidden");
+      document.body.style.overflow = "auto";
+    }
+
+    // Redirect ke halaman product
+    window.location.href = targetURL;
+  }
 }
 
 // Panggil otomatis pas DOM siap
@@ -663,6 +695,17 @@ document.addEventListener("DOMContentLoaded", () => {
     // Initialize search
     console.log('Initializing search...');
     initializeSearch();
+    
+    // Initialize search overlay with retry mechanism for dynamic content
+    console.log('Initializing search overlay...');
+    initializeSearchOverlay();
+    
+    // Also try again after a delay to catch dynamically loaded content
+    setTimeout(() => {
+      console.log('Retrying search initialization...');
+      initializeSearch();
+      initializeSearchOverlay();
+    }, 500);
     
     // Initialize manage products button
     console.log('Initializing manage products buttons...');

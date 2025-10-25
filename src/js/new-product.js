@@ -1,29 +1,34 @@
-// Konfigurasi untuk halaman produk
+// ===== CONFIGURATION ===== //
 const API_URL = 'http://localhost:4002/api/products';
-const MAX_PRODUCTS = 8; // batas untuk "new products"
+const MAX_PRODUCTS = 8; // batas untuk “new products”
 let allProducts = [];
 let filteredProducts = [];
 
-// Normalisasi ID produk jadi string yang stabil
+// Normalize product id to a stable string
 function getProductId(product) {
   const raw = product?._id ?? product?.id ?? '';
   return String(raw);
 }
 
-// Helper untuk tambah class sementara buat animasi
+// Small helper to add a class temporarily for micro animations
 function addTemporaryClass(el, className, durationMs = 300) {
   if (!el) return;
   el.classList.add(className);
   setTimeout(() => el.classList.remove(className), durationMs);
 }
 
-// Fungsi untuk user dan keranjang
+// ===== USER & CART UTILITIES ===== //
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   return user.id || null;
 }
 
-// Ambil data keranjang dari localStorage
+// Check if current user is admin
+function isAdmin() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return user.role === 'owner' || localStorage.getItem('isAdmin') === 'true';
+}
+
 function getCart() {
   const userId = getCurrentUserId();
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
@@ -163,11 +168,11 @@ async function renderProducts(productList) {
                             onerror="this.onerror=null; this.src='https://via.placeholder.com/280x250?text=Gagal+Memuat+Gambar';"
                         >
 
-                        <button 
+                        ${!isAdmin() ? `<button 
                             class="wishlist-btn absolute top-2 right-2 bg-white/80 backdrop-blur-md rounded-full p-2 shadow hover:bg-red-100 transition"
                             data-id="${idStr}">
                             <img src="${wishlistIcon}" alt="Wishlist" class="w-5 h-5">
-                        </button>
+                        </button>` : ''}
                     </div>
 
                     <span class="inline-block bg-[#E4CDA7] rounded-[5px] px-2 py-1 text-xs font-semibold uppercase mb-2">
@@ -182,8 +187,8 @@ async function renderProducts(productList) {
                         <button class="view-detail flex-1 px-3 py-2 text-sm text-[#382E2A] border border-[#382E2A] hover:bg-gray-100 rounded-[5px] text-center transition duration-150" data-id="${idStr}">
                             View Detail
                         </button>
-                        <button class="add-to-cart flex-1 px-3 py-2 text-sm bg-[#8C5E3C] text-white hover:bg-[#382E2A] rounded-[5px] transition duration-150" data-id="${idStr}">
-                            Add To Cart
+                        <button class="add-to-cart flex-1 px-3 py-2 text-sm ${isAdmin() ? 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]' : 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]'} rounded-[5px] transition duration-150" data-id="${idStr}">
+                            ${isAdmin() ? 'Edit' : 'Add To Cart'}
                         </button>
                     </div>
                 </div>`;
@@ -209,9 +214,16 @@ async function renderProducts(productList) {
         });
     });
 
-    // Add to cart
+    // Add to cart / Edit
     container.querySelectorAll('.add-to-cart').forEach(btn => {
       btn.addEventListener('click', async e => {
+        // If admin, redirect to admin page
+        if (isAdmin()) {
+          window.location.href = 'pages/admin.html';
+          return;
+        }
+        
+        // If regular user, add to cart
         const productId = String(e.currentTarget.dataset.id);
         const clickedBtn = e.currentTarget;
         try {

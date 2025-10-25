@@ -1,27 +1,24 @@
-// Import dependencies yang dibutuhkan
 import express from 'express';
 import cors from 'cors';
 import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 
-// Load environment variables dari config.env
+// Load environment variables from config.env
 dotenv.config({ path: './config.env' });
 
-// Setup Express app
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Ambil konfigurasi dari environment variables
 const PORT = process.env.PORT;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-// Initialize Groq client untuk AI
+// Initialize Groq client
 const groq = new Groq({
   apiKey: GROQ_API_KEY,
 });
 
-// System prompt untuk Attic Lounges chatbot
+// System prompt for Attic Lounges chatbot
 const SYSTEM_PROMPT = `Kamu adalah Atticbot, asisten AI yang ramah untuk Attic Lounges, toko thrift preloved. 
 
 Peranmu:
