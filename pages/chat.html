@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atticlounges Chatbot</title>
+    <link href="../src/css/output.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .chat-container { height: calc(100vh - 8rem); }
+        .guest-mode .user { display: none; }
+        .user-mode .guest { display: none; }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col h-screen">
+    <!-- Unified header injected by src/js/header.js -->
+
+    <main class="flex-grow flex flex-col p-4 overflow-hidden relative">
+        <div id="chat-messages" class="flex-grow overflow-y-auto mb-4"></div>
+        <div class="sticky bottom-0 bg-white p-4 border-t border-gray-200">
+            <div class="flex items-center gap-4 max-w-2xl mx-auto">
+                <input type="text" id="user-input" placeholder="Ketik pesan Anda..." class="flex-grow p-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-500">
+                <button id="send-button" class="bg-[#B4AB98] text-white p-3 rounded-full shadow-lg hover:bg-yellow-600 transition-colors">
+                    <svg class="w-6 h-6 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path></svg>
+                </button>
+            </div>
+        </div>
+    </main>
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
+        
+            <!-- Tombol close -->
+            <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <!-- Isi modal -->
+            <h2 class="text-2xl font-semibold mb-4 text-center">Masuk</h2>
+            
+            <!-- Toggle untuk User/Admin -->
+            <div class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                <button id="user-login-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors bg-white text-gray-900 shadow-sm">
+                    User
+                </button>
+                <button id="admin-login-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors text-gray-500 hover:text-gray-700">
+                    Admin
+                </button>
+            </div>
+
+            <!-- User Login -->
+            <div id="user-login-content">
+                <p class="text-gray-600 mb-6 text-center">Gunakan akun Google Anda.</p>
+                <button id="google-login" class="flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-300 hover:bg-gray-100 w-full">
+                    <img class="h-6 w-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
+                    <span>Masuk dengan Google</span>
+                </button>
+            </div>
+
+            <!-- Admin Login -->
+            <div id="admin-login-content" class="hidden">
+                <form id="admin-login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Admin</label>
+                        <input type="email" id="admin-email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
+                               placeholder="owner@atticlounges.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="admin-password" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
+                               placeholder="Masukkan password admin">
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                        Masuk sebagai Admin
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
+        
+            <!-- Tombol close -->
+            <button id="closeSignupModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <!-- Isi modal -->
+            <h2 class="text-2xl font-semibold mb-4 text-center">Daftar</h2>
+            <p class="text-gray-600 mb-6 text-center">Gunakan akun Google Anda.</p>
+            
+            <button id="google-signup" class="flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-300 hover:bg-gray-100 w-full">
+                <img class="h-6 w-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
+                <span>Daftar dengan Google</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="../src/js/header.js"></script>
+    <script src="../src/js/app.js"></script>
+    <script src="../src/js/chat.js"></script>
+    <script src="../src/js/footer.js"></script>
+</body>
+</html>

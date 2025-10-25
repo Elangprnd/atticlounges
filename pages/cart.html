@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Attic Lounges</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../src/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body class="bg-gray-50 text-gray-800 w-full">
+
+    <!-- Unified header injected by src/js/header.js -->
+
+    <!-- Main Content -->
+    <main class="min-h-screen py-8">
+        <div class="container px-6 ">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
+                <p class="text-gray-600">Select items to include in your order</p>
+            </div>
+
+            <!-- Empty Cart Message -->
+            <div id="empty-cart" class="hidden flex flex-col items-center text-gray-600 mt-10">
+                <img src="https://res.cloudinary.com/dxf64h9fe/image/upload/v1760363284/cart_1_hr8ag9.png" class="w-16 h-16 mb-4" alt="empty">
+                <p class="text-lg font-medium">Your cart is empty</p>
+                <a href="product.html" class="mt-4 px-6 py-3 rounded-md text-white font-medium bg-amber-600 hover:bg-amber-700 transition duration-200 shadow-md">Start shopping</a>
+            </div>
+
+            <!-- Cart Items -->
+            <div id="cart-items" class="w-full max-w-4xl bg-white shadow-md rounded-2xl p-6 space-y-4"></div>
+
+            <!-- Cart Summary -->
+            <div id="cart-summary" class="w-full max-w-4xl mt-8 bg-white shadow-md rounded-2xl p-6">
+                <div class="flex justify-between text-gray-700 mb-2">
+                    <span>Selected Items:</span>
+                    <span id="summary-item-count">0</span>
+                </div>
+                <div class="flex justify-between text-gray-700 mb-2">
+                    <span>Subtotal:</span>
+                    <span id="subtotal">Rp 0</span>
+                </div>
+                <hr class="my-2" />
+                <div class="flex justify-between text-lg font-semibold text-gray-800">
+                    <span>Total:</span>
+                    <span id="total-price">Rp 0</span>
+                </div>
+                <div class="flex flex-col sm:flex-row justify-between items-center pt-6 gap-4">
+                    <button id="delete-selected" class="px-6 py-3 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-semibold transition">Delete Selected</button>
+                    <button id="checkout" class="px-8 py-3 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] font-semibold shadow-md transition">Checkout Now</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <script src="../src/js/footer.js"></script>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
+        
+            <!-- Tombol close -->
+            <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <!-- Isi modal -->
+            <h2 class="text-2xl font-semibold mb-4 text-center">Masuk</h2>
+            
+            <!-- Toggle untuk User/Admin -->
+            <div class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                <button id="user-login-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors bg-white text-gray-900 shadow-sm">
+                    User
+                </button>
+                <button id="admin-login-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors text-gray-500 hover:text-gray-700">
+                    Admin
+                </button>
+            </div>
+
+            <!-- User Login -->
+            <div id="user-login-content">
+                <p class="text-gray-600 mb-6 text-center">Gunakan akun Google Anda.</p>
+                <button id="google-login" class="flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-300 hover:bg-gray-100 w-full">
+                    <img class="h-6 w-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
+                    <span>Masuk dengan Google</span>
+                </button>
+            </div>
+
+            <!-- Admin Login -->
+            <div id="admin-login-content" class="hidden">
+                <form id="admin-login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Admin</label>
+                        <input type="email" id="admin-email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
+                               placeholder="owner@atticlounges.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="admin-password" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
+                               placeholder="Masukkan password admin">
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                        Masuk sebagai Admin
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
+        
+            <!-- Tombol close -->
+            <button id="closeSignupModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <!-- Isi modal -->
+            <h2 class="text-2xl font-semibold mb-4 text-center">Daftar</h2>
+            <p class="text-gray-600 mb-6 text-center">Gunakan akun Google Anda.</p>
+            
+            <button id="google-signup" class="flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-300 hover:bg-gray-100 w-full">
+                <img class="h-6 w-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
+                <span>Daftar dengan Google</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="../src/js/header.js"></script>
+    <script src="../src/js/app.js"></script>
+    <script src="../src/js/cart.js"></script>
+    <script src="../src/js/footer.js"></script>
+</body>
+</html>

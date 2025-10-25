@@ -1,0 +1,34 @@
+{
+  "name": "attic-lounges",
+  "version": "1.0.0",
+  "description": "Attic Lounges - E-commerce website with owner-only product management",
+  "main": "index.html",
+  "scripts": {
+    "install-all": "npm run install:user && npm run install:product && npm run install:order",
+    "install:user": "cd services/user-service && npm install",
+    "install:product": "cd services/product-service && npm install",
+    "install:order": "cd services/order-service && npm install",
+    "start:user": "cd services/user-service && npm start",
+    "start:product": "cd services/product-service && npm start",
+    "start:order": "cd services/order-service && npm start",
+    "setup": "npm run install-all && echo 'Setup complete! Use start.bat to begin.'"
+  },
+  "keywords": [
+    "ecommerce",
+    "nodejs",
+    "mongodb",
+    "express",
+    "owner-management"
+  ],
+  "author": "Attic Lounges Team",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.14"
+  }
+}

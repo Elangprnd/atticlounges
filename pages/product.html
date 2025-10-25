@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Attic Lounges</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../src/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Unified header injected by src/js/header.js -->
+
+    <!-- Main Content -->
+    <main class="min-h-screen">
+        <!-- Page Header -->
+        <section class="bg-white py-8">
+            <div class="container mx-auto px-6">
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">All Products</h1>
+                <p class="text-gray-600">Discover unique preloved items</p>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="bg-white border-b py-4">
+            <div class="container mx-auto px-6">
+                <div class="flex flex-wrap gap-4 items-center">
+                    <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                        <option value="">All Categories</option>
+                        <option value="Fashion">Fashion</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Elektronik">Electronics</option>
+                        <option value="Buku">Books</option>
+                    </select>
+                    <select id="price-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                        <option value="">All Prices</option>
+                        <option value="0-100000">Under Rp 100,000</option>
+                        <option value="100000-200000">Rp 100,000 - 200,000</option>
+                        <option value="200000-300000">Rp 200,000 - 300,000</option>
+                        <option value="300000+">Above Rp 300,000</option>
+                    </select>
+                    <select id="sort-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                        <option value="name">Sort by Name</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Products Grid -->
+        <section class="py-8">
+            <div class="container mx-auto px-6">
+                <div id="results-info" class="flex flex-wrap items-center justify-between gap-3 mb-4 hidden">
+                    <div class="text-sm text-gray-700">
+                        <span id="active-search" class="hidden">Results for <span class="font-semibold"></span></span>
+                        <span id="active-category" class="hidden">Category: <span class="font-semibold"></span></span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <span id="results-count" class="text-sm text-gray-500">0 results</span>
+                        <button id="clear-filters" class="text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">Clear</button>
+                    </div>
+                </div>
+                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+                <div id="no-products" class="text-center py-12 hidden">
+                    <p class="text-gray-500 text-lg">No products found matching your criteria.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
+        
+            <!-- Tombol close -->
+            <button id="closeModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <!-- Isi modal -->
+            <h2 class="text-2xl font-semibold mb-4 text-center">Masuk</h2>
+            
+            <!-- Toggle untuk User/Admin -->
+            <div class="flex mb-6 bg-gray-100 rounded-lg p-1">
+                <button id="user-login-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors bg-white text-gray-900 shadow-sm">
+                    User
+                </button>
+                <button id="admin-login-tab" class="flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors text-gray-500 hover:text-gray-700">
+                    Admin
+                </button>
+            </div>
+
+            <!-- User Login -->
+            <div id="user-login-content">
+                <p class="text-gray-600 mb-6 text-center">Gunakan akun Google Anda.</p>
+                <button id="google-login" class="flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-300 hover:bg-gray-100 w-full">
+                    <img class="h-6 w-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
+                    <span>Masuk dengan Google</span>
+                </button>
+            </div>
+
+            <!-- Admin Login -->
+            <div id="admin-login-content" class="hidden">
+                <form id="admin-login-form" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Email Admin</label>
+                        <input type="email" id="admin-email" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
+                               placeholder="owner@atticlounges.com">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Password</label>
+                        <input type="password" id="admin-password" required 
+                               class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
+                               placeholder="Masukkan password admin">
+                    </div>
+                    <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                        Masuk sebagai Admin
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signupModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8 relative">
+        
+            <!-- Tombol close -->
+            <button id="closeSignupModal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700">&times;</button>
+
+            <!-- Isi modal -->
+            <h2 class="text-2xl font-semibold mb-4 text-center">Daftar</h2>
+            <p class="text-gray-600 mb-6 text-center">Gunakan akun Google Anda.</p>
+            
+            <button id="google-signup" class="flex items-center justify-center gap-3 px-6 py-3 rounded-lg font-medium transition-colors duration-200 border border-gray-300 hover:bg-gray-100 w-full">
+                <img class="h-6 w-6" src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google logo">
+                <span>Daftar dengan Google</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <script src="../src/js/header.js"></script>
+    <script src="../src/js/app.js"></script>
+    <script src="../src/js/product.js"></script>
+    <script src="../src/js/footer.js"></script>
+</body>
+</html>

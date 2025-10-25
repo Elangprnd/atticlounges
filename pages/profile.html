@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Attic Lounges</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="../src/css/output.css" rel="stylesheet">
+    <link rel="stylesheet" href="../src/css/style.css">
+</head>
+<body class="bg-gray-50">
+    <!-- Unified header injected by src/js/header.js -->
+
+    <!-- Main Content -->
+    <main class="min-h-screen py-8">
+        <div class="max-w-5xl mx-auto px-6">
+            <h1 class="text-3xl font-bold text-gray-800 mb-8">My Profile</h1>
+            <div class="bg-white rounded-xl shadow-sm p-6 space-y-6">
+                <div class="flex items-center space-x-4">
+                    <img src="https://res.cloudinary.com/dxf64h9fe/image/upload/v1760354998/download_13_z7b0lk.jpg" alt="User Avatar" class="w-24 h-24 rounded-full object-cover border-2 border-[#DC9C84]">
+                    <div>
+                        <h2 id="profile-name" class="text-2xl font-bold text-gray-900">User</h2>
+                        <p id="profile-email" class="text-gray-600">user@atticlounges.com</p>
+                        <button id="edit-profile-btn" class="mt-2 px-4 py-2 bg-[#DC9C84] text-white rounded-lg text-sm hover:bg-[#93392C] transition">Edit Profile</button>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-lg font-semibold text-gray-800">Account Details</h3>
+                        <p class="text-gray-700">Member Since: <span id="member-since">N/A</span></p>
+                        <p class="text-gray-700">Total Orders: <span id="total-orders">0</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Account Settings Modal -->
+            <div id="account-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+                <div class="bg-white rounded-xl shadow-xl w-full max-w-xl">
+                    <div class="px-6 py-4 border-b flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-semibold text-gray-900">Pengaturan Akun</h2>
+                            <p class="text-sm text-gray-600">Kelola informasi akun dan keamanan Anda</p>
+                        </div>
+                        <button id="close-account-modal" class="text-gray-400 hover:text-gray-600">&times;</button>
+                    </div>
+                    <form id="account-form" class="p-6 space-y-6">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Nama Lengkap *</label>
+                                <input id="full-name" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]" placeholder="Masukkan nama lengkap">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+                                <input id="email" type="email" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]" placeholder="user@atticlounges.com">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Tanggal Lahir</label>
+                                <input id="birth-date" type="date" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                            </div>
+                        </div>
+                        <div class="border-t pt-6 border-gray-200">
+                            <h3 class="text-md font-medium text-gray-900 mb-4">Ubah Password</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Saat Ini</label>
+                                    <input id="current-password" type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]" placeholder="Masukkan password saat ini">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Password Baru</label>
+                                    <input id="new-password" type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]" placeholder="Masukkan password baru">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Konfirmasi Password Baru</label>
+                                    <input id="confirm-password" type="password" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]" placeholder="Konfirmasi password baru">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-3">
+                            <button type="button" id="cancel-account" class="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100">Batal</button>
+                            <button type="submit" class="bg-[#DC9C84] text-white px-6 py-2 rounded-lg font-medium hover:bg-[#93392C] transition">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- Owner Inbox (visible for owner only) -->
+            <div id="owner-inbox" class="bg-white rounded-xl shadow-sm p-6 mt-8 hidden">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-900">Incoming Chats</h2>
+                    <button id="clear-owner-inbox" class="text-sm px-3 py-1 rounded-md border border-gray-300 hover:bg-gray-100">Clear</button>
+                </div>
+                <div id="owner-inbox-list" class="space-y-3"></div>
+                <div class="mt-4 text-right">
+                    <a href="chat.html" class="text-sm text-[#DC9C84] hover:underline">Open Chat</a>
+                </div>
+            </div>
+
+            <!-- Address Management -->
+            <div id="address-section" class="bg-white rounded-xl shadow-sm p-6 mt-8">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900">Alamat Saya</h2>
+                        <p class="text-sm text-gray-600">Kelola alamat pengiriman untuk pesanan</p>
+                    </div>
+                    <button id="add-address-btn" class="bg-[#DC9C84] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#93392C] transition">Tambah Alamat</button>
+                </div>
+                <div id="address-list" class="space-y-4"></div>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Address Modal -->
+    <div id="address-modal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-xl shadow-xl w-full max-w-lg">
+            <div class="px-6 py-4 border-b flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">Tambah Alamat</h3>
+                <button id="close-address-modal" class="text-gray-400 hover:text-gray-600">&times;</button>
+            </div>
+            <form id="address-form" class="p-6 space-y-4">
+                <input type="hidden" id="address-id">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Label Alamat *</label>
+                    <input id="address-label" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#DC9C84]" placeholder="Rumah / Kantor">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Penerima *</label>
+                        <input id="recipient-name" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Telepon *</label>
+                        <input id="recipient-phone" type="tel" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84]" placeholder="08xxxxxxxxxx">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Alamat Lengkap *</label>
+                    <textarea id="full-address" rows="3" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84]" placeholder="Jalan, nomor rumah, RT/RW, kelurahan, kecamatan"></textarea>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Kota/Kabupaten *</label>
+                        <input id="city" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84]">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Provinsi *</label>
+                        <input id="province" type="text" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84]">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Kode Pos *</label>
+                    <input id="postal-code" type="text" maxlength="5" class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-[#DC9C84]" placeholder="12345">
+                </div>
+                <div class="flex items-center justify-end gap-3 pt-2">
+                    <button type="button" id="cancel-address" class="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100">Batal</button>
+                    <button type="submit" class="px-5 py-2 rounded-md bg-[#DC9C84] text-white hover:bg-[#93392C]">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Modals injected by src/js/app.js -->
+
+    <script src="../src/js/header.js"></script>
+    <script src="../src/js/app.js"></script>
+    <script src="../src/js/profile.js"></script>
+    <script src="../src/js/footer.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+}
+
+h1 {
+    font-family: 'Josefin Sans', serif;
+    font-weight: 600;
+    font-style: normal;
+    font-spacing: 0.5em;
+}
+
+.user.hidden {
+    display: none;
+}
+
+#button-login {
+    border: 2px solid #555555;
+    color: #555555;
+}
+
+
+
+#button-login:hover {
+    background-color: #555555;
+    color: white;
+    cursor: pointer;
+}
+
+#button-sign-up:hover {
+    transform: scale(1.05);
+    box-shadow: inset -2px -2px 5px rgba(0,0,0,0.2), inset 2px 2px 5px rgba(255,255,255,0.5);
+    cursor: pointer;
+}
+
+#categories-section {
+  background-image: url('../img/background[1].jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+}
+
+#testimoni-section {
+  background-image: url('../img/background[1].jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+}
+
+.wishlist-btn.active img {
+  transform: scale(1.2);
+  transition: transform 0.2s ease;
+}
