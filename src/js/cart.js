@@ -73,11 +73,6 @@ function renderCart() {
         </div>
       </div>
       <div class="flex items-center space-x-4">
-        <div class="flex items-center gap-2">
-          <button class="qty-btn w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center" data-index="${index}" data-action="decrease">-</button>
-          <span class="qty-display w-8 text-center">${item.qty}</span>
-          <button class="qty-btn w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center" data-index="${index}" data-action="increase">+</button>
-        </div>
         <button class="delete-btn text-red-500 hover:text-red-600 text-sm font-medium" data-index="${index}">Hapus</button>
       </div>
     `;
@@ -95,23 +90,7 @@ function formatPrice(value) {
 
 // ===== ADD CART EVENT LISTENERS ===== //
 function addCartEventListeners() {
-  // Quantity controls
-  document.querySelectorAll(".qty-btn").forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const index = parseInt(e.target.dataset.index);
-      const action = e.target.dataset.action;
-      let cart = getCart();
-
-      if (action === "increase") {
-        cart[index].qty += 1;
-      } else if (action === "decrease" && cart[index].qty > 1) {
-        cart[index].qty -= 1;
-      }
-
-      saveCart(cart);
-      renderCart();
-    });
-  });
+  // Quantity controls removed - thrift store only allows 1 item per product
 
   // Delete individual items
   document.querySelectorAll(".delete-btn").forEach((btn) => {

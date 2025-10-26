@@ -161,7 +161,8 @@ async function renderProductDetails() {
       const key = product._id || product.id;
       const existing = cart.find(item => item._id === key || item.id === key);
       if (existing) {
-        existing.qty += 1;
+        alert('Produk ini sudah ada di keranjang! (Thrift store: setiap produk hanya ada 1)');
+        return;
       } else {
         cart.push({ ...product, qty: 1 });
       }

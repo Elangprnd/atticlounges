@@ -72,9 +72,17 @@ function saveWishlist(wishlist) {
 // ===== FETCH PRODUCTS ===== //
 async function fetchProducts() {
   try {
+    console.log('Fetching products from:', API_URL);
     const response = await fetch(API_URL, { mode: 'cors' });
-    if (!response.ok) throw new Error(`HTTP Error ${response.status}`);
+    console.log('Response status:', response.status);
+    
+    if (!response.ok) {
+      console.error('HTTP Error:', response.status, response.statusText);
+      throw new Error(`HTTP Error ${response.status}`);
+    }
+    
     const data = await response.json();
+    console.log('Fetched data:', data);
 
     if (!Array.isArray(data)) {
       if (data.products && Array.isArray(data.products)) {
@@ -86,6 +94,7 @@ async function fetchProducts() {
       allProducts = data;
     }
 
+    console.log('All products loaded:', allProducts.length);
     return allProducts;
   } catch (error) {
     console.error('Gagal fetch produk:', error);
@@ -95,13 +104,16 @@ async function fetchProducts() {
 
 // ===== INIT CAROUSEL NEW PRODUCTS ===== //
 async function initNewProductsCarousel() {
+    console.log('Initializing new products carousel...');
     const allProducts = await fetchProducts();
+    console.log('All products received:', allProducts.length);
     
     // Asumsi: Produk terbaru berada di awal array, 
     // jika produk terbaru ada di akhir, gunakan .reverse() dulu.
     // Jika perlu mengurutkan berdasarkan tanggal buat (_createdAt), lakukan di sini.
     
     const newProducts = allProducts.slice(0, MAX_PRODUCTS); // Ambil 8 produk pertama
+    console.log('New products to display:', newProducts.length);
     
     // Ganti teks "Memuat produk..." dengan produk yang sudah di-render
     await renderProducts(newProducts);
@@ -109,14 +121,40 @@ async function initNewProductsCarousel() {
 
 // ===== EVENT LISTENER UTAMA ===== //
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded - Starting initialization...');
+    
     // 1. Inisialisasi hitungan keranjang
     updateCartCount();
 
-    // 2. Inisialisasi New Products Carousel
-    initNewProductsCarousel();
+    // 2. Test API connection first
+    testAPIConnection().then(() => {
+        // 3. Inisialisasi New Products Carousel
+        initNewProductsCarousel();
+    }).catch(error => {
+        console.error('API connection failed:', error);
+        const container = document.getElementById("productList");
+        if (container) {
+            container.innerHTML = `<p class="text-center w-full text-red-600">Error loading products. Please check console for details.</p>`;
+        }
+    });
 
     // Catatan: Pastikan elemen HTML untuk New Arrival sudah ada di halaman.
 });
+
+// Test API connection
+async function testAPIConnection() {
+    try {
+        console.log('Testing API connection...');
+        const response = await fetch('http://localhost:4002/api/test');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const data = await response.json();
+        console.log('API test successful:', data);
+        return true;
+    } catch (error) {
+        console.error('API test failed:', error);
+        throw error;
+    }
+}
 
 // ===== FORMAT RUPIAH ===== //
 function formatRupiah(amount) {
@@ -130,11 +168,16 @@ function formatRupiah(amount) {
 
 // ===== RENDER PRODUCT LIST =====
 async function renderProducts(productList) {
+    console.log('Rendering products:', productList.length);
     const container = document.getElementById("productList");
-    if (!container) return;
+    if (!container) {
+        console.error('Container productList not found!');
+        return;
+    }
 
     try {
         if (!productList.length) {
+            console.log('No products to display');
             container.innerHTML = `<p class="text-center w-full text-gray-600">Belum ada produk tersedia.</p>`;
             return;
         }
@@ -147,10 +190,11 @@ async function renderProducts(productList) {
             .map((product) => {
               const idStr = String(getProductId(product));
               const isWishlisted = wishlist.includes(idStr); // ✅ gunakan variabel yang sudah ada
+              const isSold = product.isSold === true; // Hanya cek isSold, tidak cek stock
 
               const wishlistIcon = isWishlisted
                 ? "https://cdn-icons-png.flaticon.com/128/833/833472.png" // ❤ hati penuh
-                : "https://cdn-icons-png.flaticon.com/128/833/833300.png"; // 🤍 hati kosong
+                : "https://cdn-icons-png.flaticon.com/128/833/833300.png"; // 🤍 hati kosong
 
                 const imageUrl = product.image || "https://via.placeholder.com/280x250?text=No+Image";
                 const productName = product.name || "Produk Tanpa Nama";
@@ -158,7 +202,7 @@ async function renderProducts(productList) {
                 const priceFormatted = formatRupiah(product.price); // Gunakan formatRupiah
 
                 return `
-                <div class="product-card flex-shrink-0 w-72 md:w-[280px] bg-white p-4 shadow-lg border border-gray-100 rounded-[5px] text-left snap-start">
+                <div class="product-card flex-shrink-0 w-72 md:w-[280px] bg-white p-4 shadow-lg border border-gray-100 rounded-[5px] text-left snap-start ${isSold ? 'opacity-75' : ''}">
 
                     <div class="relative h-64 mb-3 overflow-hidden flex items-center justify-center bg-gray-100">
                         <img 
@@ -168,7 +212,11 @@ async function renderProducts(productList) {
                             onerror="this.onerror=null; this.src='https://via.placeholder.com/280x250?text=Gagal+Memuat+Gambar';"
                         >
 
-                        ${!isAdmin() ? `<button 
+                        ${isSold ? `<div class="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
+                            SOLD
+                        </div>` : ''}
+
+                        ${!isAdmin() && !isSold ? `<button 
                             class="wishlist-btn absolute top-2 right-2 bg-white/80 backdrop-blur-md rounded-full p-2 shadow hover:bg-red-100 transition"
                             data-id="${idStr}">
                             <img src="${wishlistIcon}" alt="Wishlist" class="w-5 h-5">
@@ -187,8 +235,8 @@ async function renderProducts(productList) {
                         <button class="view-detail flex-1 px-3 py-2 text-sm text-[#382E2A] border border-[#382E2A] hover:bg-gray-100 rounded-[5px] text-center transition duration-150" data-id="${idStr}">
                             View Detail
                         </button>
-                        <button class="add-to-cart flex-1 px-3 py-2 text-sm ${isAdmin() ? 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]' : 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]'} rounded-[5px] transition duration-150" data-id="${idStr}">
-                            ${isAdmin() ? 'Edit' : 'Add To Cart'}
+                        <button class="add-to-cart flex-1 px-3 py-2 text-sm ${isSold ? 'bg-gray-400 cursor-not-allowed' : (isAdmin() ? 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]' : 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]')} rounded-[5px] transition duration-150" data-id="${idStr}" ${isSold ? 'disabled' : ''}>
+                            ${isSold ? 'SOLD OUT' : (isAdmin() ? 'Edit' : 'Add To Cart')}
                         </button>
                     </div>
                 </div>`;
@@ -230,6 +278,13 @@ async function renderProducts(productList) {
           const response = await fetch(`${API_URL}/${productId}`);
           if (!response.ok) throw new Error('Product not found');
           const product = await response.json();
+          
+          // Check if product is sold
+          if (product.isSold === true) {
+            alert('Produk ini sudah terjual!');
+            return;
+          }
+          
           const idStr = getProductId(product) || productId;
           const cartItem = {
             _id: idStr,
@@ -241,7 +296,12 @@ async function renderProducts(productList) {
           };
           let cart = getCart();
           const existing = cart.find(item => String(item._id ?? item.id) === idStr);
-          if (existing) existing.qty += 1; else cart.push(cartItem);
+          if (existing) {
+            alert('Produk ini sudah ada di keranjang! (Thrift store: setiap produk hanya ada 1)');
+            return;
+          } else {
+            cart.push(cartItem);
+          }
           saveCart(cart);
           updateCartCount();
 

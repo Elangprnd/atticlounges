@@ -12,8 +12,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
 function setupEventListeners() {
     // Filter buttons
+    document.getElementById('filter-all-btn').addEventListener('click', () => {
+        currentFilter = 'all';
+        filterOrders();
+    });
+    
     document.getElementById('filter-pending-btn').addEventListener('click', () => {
         currentFilter = 'pending';
+        filterOrders();
+    });
+    
+    document.getElementById('filter-processing-btn').addEventListener('click', () => {
+        currentFilter = 'processing';
+        filterOrders();
+    });
+    
+    document.getElementById('filter-shipped-btn').addEventListener('click', () => {
+        currentFilter = 'shipped';
+        filterOrders();
+    });
+    
+    document.getElementById('filter-delivered-btn').addEventListener('click', () => {
+        currentFilter = 'delivered';
+        filterOrders();
+    });
+    
+    document.getElementById('filter-cancelled-btn').addEventListener('click', () => {
+        currentFilter = 'cancelled';
         filterOrders();
     });
     
@@ -50,7 +75,8 @@ function updateStats() {
         pending: 0,
         processing: 0,
         shipped: 0,
-        delivered: 0
+        delivered: 0,
+        cancelled: 0
     };
     
     allOrders.forEach(order => {
@@ -63,6 +89,7 @@ function updateStats() {
     document.getElementById('processing-count').textContent = stats.processing;
     document.getElementById('shipped-count').textContent = stats.shipped;
     document.getElementById('delivered-count').textContent = stats.delivered;
+    document.getElementById('cancelled-count').textContent = stats.cancelled;
 }
 
 function filterOrders() {
@@ -82,7 +109,7 @@ function renderOrdersTable(orders) {
     if (orders.length === 0) {
         tbody.innerHTML = `
             <tr>
-                <td colspan="7" class="px-6 py-4 text-center text-gray-500">
+                <td colspan="8" class="px-6 py-4 text-center text-gray-500">
                     ${currentFilter === 'all' ? 'Tidak ada pesanan' : `Tidak ada pesanan dengan status ${currentFilter}`}
                 </td>
             </tr>
@@ -92,6 +119,53 @@ function renderOrdersTable(orders) {
     
     orders.forEach(order => {
         const row = document.createElement('tr');
+        // Generate images for all items - Simple approach
+        const generateItemImages = (items) => {
+            console.log('Generating images for items:', items);
+            
+            if (!items || items.length === 0) {
+                return '<img src="https://via.placeholder.com/60x60/cccccc/666666?text=IMG" alt="No Image" class="w-12 h-12 object-cover rounded-lg mx-auto" onerror="this.src=\'https://via.placeholder.com/60x60/cccccc/666666?text=IMG\'">';
+            }
+            
+            if (items.length === 1) {
+                const item = items[0];
+                const imageUrl = item.image || item.imageUrl || 'https://via.placeholder.com/60x60/cccccc/666666?text=IMG';
+                console.log('Single item image:', imageUrl);
+                return `<img src="${imageUrl}" alt="Product Image" class="w-12 h-12 object-cover rounded-lg mx-auto" onerror="this.src='https://via.placeholder.com/60x60/cccccc/666666?text=IMG'">`;
+            }
+            
+            // Multiple items - show horizontally
+            console.log('Multiple items detected:', items.length);
+            let imagesHtml = '<div class="flex gap-1 justify-center">';
+            const maxImages = Math.min(items.length, 4);
+            
+            for (let i = 0; i < maxImages; i++) {
+                const item = items[i];
+                const imageUrl = item.image || item.imageUrl || 'https://via.placeholder.com/60x60/cccccc/666666?text=IMG';
+                console.log(`Item ${i + 1} image:`, imageUrl);
+                
+                imagesHtml += `
+                    <img src="${imageUrl}" 
+                         alt="Product ${i + 1}" 
+                         class="w-8 h-8 object-cover rounded" 
+                         onerror="this.src='https://via.placeholder.com/60x60/cccccc/666666?text=IMG'">
+                `;
+            }
+            
+            // If more than 4 items, show a "+" indicator
+            if (items.length > 4) {
+                imagesHtml += `
+                    <div class="w-8 h-8 bg-gray-200 rounded flex items-center justify-center text-xs font-bold text-gray-600">
+                        +${items.length - 4}
+                    </div>
+                `;
+            }
+            
+            imagesHtml += '</div>';
+            console.log('Generated HTML:', imagesHtml);
+            return imagesHtml;
+        };
+        
         row.innerHTML = `
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 text-center">
                 #${order._id.slice(-8)}
@@ -101,6 +175,9 @@ function renderOrdersTable(orders) {
             </td>
             <td class="px-6 py-4 text-sm text-gray-900 text-center">
                 ${order.items.length} item(s)
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-center">
+                ${generateItemImages(order.items)}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 text-center">
                 Rp ${order.total.toLocaleString()}
@@ -114,10 +191,13 @@ function renderOrdersTable(orders) {
                 ${new Date(order.createdAt).toLocaleDateString()}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                <button onclick="openStatusModal('${order._id}', '${order.status}')" 
+                ${order.status === 'cancelled' 
+                    ? '<span class="text-gray-400 text-sm">Final Status</span>' 
+                    : `<button onclick="openStatusModal('${order._id}', '${order.status}')" 
                         class="text-[#DC9C84] hover:text-[#93392C] transition">
-                    Update Status
-                </button>
+                        Update Status
+                    </button>`
+                }
             </td>
         `;
         tbody.appendChild(row);

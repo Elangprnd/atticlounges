@@ -28,7 +28,7 @@
             <ul class="hidden md:flex items-center justify-center gap-8 font-medium text-[18px] text-gray-700">
                 <li><a href="#hero-section" class="hover:text-gray-900 transition-colors duration-200">HOME</a></li>
                 <li><a href="pages/product.html" class="hover:text-gray-900 transition-colors duration-200">PRODUCT</a></li>
-                <li><a href="#categories-section" class="hover:text-gray-900 transition-colors duration-200">CATEGORY</a></li>
+                <li><a href="#categories-section" class="hover:text-gray-900 transition-colors duration-200" onclick="handleCategoryClick(event)">CATEGORY</a></li>
                 <li>
                     <button id="searchBtn" class="hover:text-gray-900 transition-colors duration-200 flex items-center">
                         <img src="https://cdn-icons-png.flaticon.com/128/3031/3031293.png" alt="Search Icon" class="w-5 h-5 object-contain"/>
@@ -247,7 +247,7 @@
         </section>
 
         <!-- New Category Section -->
-        <section class="py-16 bg-white">
+        <section id="categories-section" class="py-16 bg-white">
             <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-20">
                 <h2 class="text-3xl font-bold mb-10 text-center">SHOP BY CATEGORY</h2>
                 <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
@@ -262,7 +262,7 @@
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Under Rp 100.000</p>
                     </div>
                     <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Buku'">
-                        <img src="https://i.pinimg.com/736x/c1/33/84/c133840fdd97ea03cb903d4928c17faf.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
+                        <img src="https://i.pinimg.com/1200x/af/c2/8c/afc28cb871c7134bfd23578b3489db90.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Books</p> 
                     </div>
@@ -272,7 +272,7 @@
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Accessories</p>
                     </div>
                     <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?price=above&min=300000'">
-                        <img src="https://i.pinimg.com/1200x/af/c2/8c/afc28cb871c7134bfd23578b3489db90.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
+                        <img src="https://i.pinimg.com/736x/c1/33/84/c133840fdd97ea03cb903d4928c17faf.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Above Rp 300.000</p>
                     </div>

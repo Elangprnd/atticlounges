@@ -22,7 +22,7 @@
         <ul class="hidden md:flex items-center justify-center gap-8 font-medium text-[18px] text-gray-700">
           <li><a href="${isInPages ? '../index.html#hero-section' : '#hero-section'}" class="hover:text-gray-900 transition-colors duration-200">HOME</a></li>
           <li><a href="${pageHref('product.html')}" class="hover:text-gray-900 transition-colors duration-200">PRODUCT</a></li>
-          <li><a href="${isInPages ? '../index.html#categories-section' : '#categories-section'}" class="hover:text-gray-900 transition-colors duration-200">CATEGORY</a></li>
+          <li><a href="${isInPages ? '../index.html#categories-section' : '#categories-section'}" class="hover:text-gray-900 transition-colors duration-200" onclick="handleCategoryClick(event)">CATEGORY</a></li>
           <li>
             <button id="searchBtn" class="hover:text-gray-900 transition-colors duration-200 flex items-center">
               <img src="https://cdn-icons-png.flaticon.com/128/3031/3031293.png" alt="Search Icon" class="w-5 h-5 object-contain"/>

@@ -206,7 +206,7 @@ function renderAddressList() {
   }
 
   list.innerHTML = addresses.map((a, idx) => `
-    <div class="border rounded-lg p-4">
+    <div class="border border-gray-200 rounded-lg p-4 bg-white shadow-sm">
       <div class="flex items-start justify-between">
         <div class="text-sm text-gray-800">
           <div class="font-semibold">${escapeHtml(a.label || '')}</div>
@@ -215,7 +215,7 @@ function renderAddressList() {
           <div class="text-gray-700">${escapeHtml(a.city || '')}, ${escapeHtml(a.province || '')} ${escapeHtml(a.postalCode || '')}</div>
         </div>
         <div class="flex items-center gap-2 ml-4">
-          <button data-idx="${idx}" class="edit-address px-3 py-1 text-xs rounded-md border hover:bg-gray-100">Edit</button>
+          <button data-idx="${idx}" class="edit-address px-3 py-1 text-xs rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition">Edit</button>
           <button data-idx="${idx}" class="delete-address px-3 py-1 text-xs rounded-md border border-red-300 text-red-600 hover:bg-red-50">Hapus</button>
         </div>
       </div>

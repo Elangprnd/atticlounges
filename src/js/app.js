@@ -469,7 +469,42 @@ function saveCart(cart) {
 // Get current user ID from token
 function getCurrentUserId() {
   const user = JSON.parse(localStorage.getItem('user') || '{}');
-  return user.id || null;
+  const userId = user.id || null;
+  
+  // Log untuk debugging
+  if (userId) {
+    console.log('Current User ID:', userId, 'Type:', typeof userId);
+  }
+  
+  return userId;
+}
+
+// Clean up old inconsistent user data
+function cleanupUserData() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  
+  // Check if user ID is in old format (user-001, user-002, etc.)
+  if (user.id && typeof user.id === 'string' && user.id.startsWith('user-')) {
+    console.warn('Found old format user ID:', user.id, '- Clearing user data');
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userRole');
+    
+    // Clear all user-specific data
+    const keys = Object.keys(localStorage);
+    keys.forEach(key => {
+      if (key.startsWith('cart_') || key.startsWith('orders_') || key.startsWith('wishlist_')) {
+        localStorage.removeItem(key);
+      }
+    });
+    
+    // Reload page to reset state
+    window.location.reload();
+    return false;
+  }
+  
+  return true;
 }
 
 function updateCartCount() {
@@ -504,6 +539,57 @@ function saveWishlist(wishlist) {
 function navigateToCategory(category) {
   localStorage.setItem('selectedCategory', category);
   window.location.href = `pages/product.html?category=${encodeURIComponent(category)}`;
+}
+
+// Handle category link click from navbar
+function handleCategoryClick(event) {
+  event.preventDefault();
+  
+  // Check if we're already on the home page
+  const isOnHomePage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+  
+  if (isOnHomePage) {
+    // If on home page, just scroll to categories section
+    const categoriesSection = document.getElementById('categories-section');
+    if (categoriesSection) {
+      // Add offset for fixed header
+      const headerHeight = 80; // Approximate header height
+      const elementPosition = categoriesSection.offsetTop;
+      const offsetPosition = elementPosition - headerHeight;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    } else {
+      console.warn('Categories section not found');
+    }
+  } else {
+    // If on other pages, navigate to home page with categories section
+    window.location.href = '../index.html#categories-section';
+  }
+}
+
+// Handle hash navigation (e.g., #categories-section)
+function handleHashNavigation() {
+  const hash = window.location.hash;
+  if (hash === '#categories-section') {
+    // Wait a bit for the page to fully load, then scroll to categories
+    setTimeout(() => {
+      const categoriesSection = document.getElementById('categories-section');
+      if (categoriesSection) {
+        // Add offset for fixed header
+        const headerHeight = 80; // Approximate header height
+        const elementPosition = categoriesSection.offsetTop;
+        const offsetPosition = elementPosition - headerHeight;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }, 200); // Increased timeout to ensure page is fully loaded
+  }
 }
 
 // ===== PRODUCT RENDERING ===== //
@@ -614,7 +700,8 @@ function addProductEventListeners() {
         const existing = cart.find((item) => item._id === productId);
 
         if (existing) {
-          existing.qty += 1;
+          alert('Produk ini sudah ada di keranjang! (Thrift store: setiap produk hanya ada 1)');
+          return;
         } else {
           cart.push({ ...product, qty: 1 });
         }
@@ -679,6 +766,12 @@ document.addEventListener("DOMContentLoaded", () => {
   console.log('DOM loaded, initializing...');
   
   try {
+    // Clean up old user data first
+    console.log('Checking for old user data...');
+    if (!cleanupUserData()) {
+      return; // Page will reload if cleanup was needed
+    }
+    
     // Initialize modals
     console.log('Initializing modals...');
     loginModal();
@@ -737,11 +830,14 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Initializing dropdown menu...');
     handleAccountDropdown();
     
-    // Render products on homepage
-    if (document.getElementById("product-list")) {
-      console.log('Rendering products...');
-      renderProducts(); // Fetch products from API instead of undefined variable
-    }
+    // Render products on homepage - DISABLED to prevent conflict with new-product.js
+    // if (document.getElementById("product-list")) {
+    //   console.log('Rendering products...');
+    //   renderProducts(); // Fetch products from API instead of undefined variable
+    // }
+    
+    // Handle hash navigation for categories section
+    handleHashNavigation();
     
     console.log('Initialization complete!');
   } catch (error) {

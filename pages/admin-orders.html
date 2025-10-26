@@ -31,10 +31,10 @@
             </div>
 
             <!-- Stats Cards -->
-            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
                 <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center">
-                        <div class="p-2 rounded-full bg-yellow-100 text-yellow-600">
+                        <div class="p-2 rounded-full bg-[#DC9C84]/20 text-[#DC9C84]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                             </svg>
@@ -62,7 +62,7 @@
 
                 <div class="bg-white rounded-lg shadow-md p-4">
                     <div class="flex items-center">
-                        <div class="p-2 rounded-full bg-[#93392C]/20 text-[#93392C]">
+                        <div class="p-2 rounded-full bg-[#DC9C84]/20 text-[#DC9C84]">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
                             </svg>
@@ -87,12 +87,43 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="bg-white rounded-lg shadow-md p-4">
+                    <div class="flex items-center">
+                        <div class="p-2 rounded-full bg-[#DC9C84]/20 text-[#DC9C84]">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-xs font-medium text-gray-600">Cancelled</p>
+                            <p class="text-xl font-semibold text-gray-900" id="cancelled-count">0</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Action Buttons -->
-            <button id="filter-pending-btn" class="px-6 py-3 bg-yellow-600 hover:bg-yellow-700 text-white rounded-lg font-medium transition mb-8">
-                Filter Pending
-            </button>
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-3 mb-8">
+                <button id="filter-all-btn" class="px-4 py-2 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
+                    All Orders
+                </button>
+                <button id="filter-pending-btn" class="px-4 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
+                    Pending
+                </button>
+                <button id="filter-processing-btn" class="px-4 py-2 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
+                    Processing
+                </button>
+                <button id="filter-shipped-btn" class="px-4 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
+                    Shipped
+                </button>
+                <button id="filter-delivered-btn" class="px-4 py-2 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
+                    Delivered
+                </button>
+                <button id="filter-cancelled-btn" class="px-4 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
+                    Cancelled
+                </button>
+            </div>
 
             <!-- Orders Table -->
             <div class="bg-white rounded-lg shadow-md overflow-hidden">
@@ -106,6 +137,7 @@
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Items</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                                 <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>

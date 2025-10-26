@@ -156,12 +156,18 @@ function renderProducts(productList) {
 
   productList.forEach((product) => {
     const isWishlisted = wishlist.includes(product._id);
+    const isSold = product.isSold === true; // Hanya cek isSold, tidak cek stock
 
     const card = document.createElement("div");
-    card.className = "group bg-white rounded-lg shadow-md overflow-hidden transition hover:shadow-xl hover:-translate-y-2 relative";
+    card.className = `group bg-white rounded-lg shadow-md overflow-hidden transition ${isSold ? 'opacity-75' : 'hover:shadow-xl hover:-translate-y-2'} relative`;
 
     card.innerHTML = `
-      ${!isAdmin() ? `<!-- Wishlist Button -->
+      ${isSold ? `<!-- SOLD Badge -->
+      <div class="absolute left-4 top-4 z-20 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
+        SOLD
+      </div>` : ''}
+      
+      ${!isAdmin() && !isSold ? `<!-- Wishlist Button -->
       <button 
         class="wishlist-btn absolute right-4 top-4 z-20 rounded-full bg-white p-1.5 transition-colors shadow-md"
         data-id="${product._id}">
@@ -198,9 +204,9 @@ function renderProducts(productList) {
                   data-id="${product._id}">
             View Details
           </button>
-          <button class="add-to-cart flex-1 text-center rounded-md text-xs py-2 font-medium text-white ${isAdmin() ? 'bg-[#8C5E3C] hover:bg-[#382E2A]' : 'bg-[#DC9C84] hover:bg-[#93392C]'} transition" 
-                  data-id="${product._id}">
-            ${isAdmin() ? 'Edit' : 'Add to Cart'}
+          <button class="add-to-cart flex-1 text-center rounded-md text-xs py-2 font-medium text-white ${isSold ? 'bg-gray-400 cursor-not-allowed' : (isAdmin() ? 'bg-[#8C5E3C] hover:bg-[#382E2A]' : 'bg-[#DC9C84] hover:bg-[#93392C]')} transition" 
+                  data-id="${product._id}" ${isSold ? 'disabled' : ''}>
+            ${isSold ? 'SOLD OUT' : (isAdmin() ? 'Edit' : 'Add to Cart')}
           </button>
         </div>
       </div>
@@ -230,12 +236,19 @@ function addProductEventListeners() {
       const product = allProducts.find((p) => p._id === productId);
       
       if (!product) return;
+      
+      // Check if product is sold
+      if (product.isSold === true) {
+        alert('Produk ini sudah terjual!');
+        return;
+      }
 
       let cart = getCart();
       const existing = cart.find((item) => item._id === productId);
 
       if (existing) {
-        existing.qty += 1;
+        alert('Produk ini sudah ada di keranjang! (Thrift store: setiap produk hanya ada 1)');
+        return;
       } else {
         cart.push({ ...product, qty: 1 });
       }

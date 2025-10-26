@@ -20,7 +20,8 @@ const productSchema = new mongoose.Schema({
   condition: String,
   size: String,
   brand: String,
-  stock: { type: Number, default: 0 }
+  stock: { type: Number, default: 1 }, // Thrift store: setiap produk hanya ada 1
+  isSold: { type: Boolean, default: false } // Status apakah produk sudah terjual
 }, { timestamps: true })
 
 const Product = mongoose.model('Product', productSchema)
@@ -71,8 +72,47 @@ async function seedProductsIfEmpty() {
 }
 
 app.get('/api/products', async (req, res) => {
+  // Thrift store: hanya tampilkan produk yang belum terjual
+  const products = await Product.find({ isSold: { $ne: true } }).sort({ createdAt: -1 }).limit(50)
+  res.json(products)
+})
+
+// Endpoint untuk melihat semua produk (termasuk yang terjual) - untuk debugging
+app.get('/api/products/all', async (req, res) => {
   const products = await Product.find().sort({ createdAt: -1 }).limit(50)
   res.json(products)
+})
+
+// Endpoint untuk reset semua produk menjadi belum terjual (untuk debugging)
+app.put('/api/products/reset-sold', async (req, res) => {
+  try {
+    const result = await Product.updateMany(
+      { isSold: true },
+      { isSold: false, stock: 1 }
+    )
+    res.json({ 
+      message: `Reset ${result.modifiedCount} products to available`,
+      modifiedCount: result.modifiedCount
+    })
+  } catch (error) {
+    res.status(500).json({ message: 'Error resetting products' })
+  }
+})
+
+// Endpoint untuk update semua produk agar memiliki stock: 1 (thrift store)
+app.put('/api/products/fix-stock', async (req, res) => {
+  try {
+    const result = await Product.updateMany(
+      { stock: 0 },
+      { stock: 1 }
+    )
+    res.json({ 
+      message: `Updated ${result.modifiedCount} products to have stock: 1`,
+      modifiedCount: result.modifiedCount
+    })
+  } catch (error) {
+    res.status(500).json({ message: 'Error fixing stock' })
+  }
 })
 
 app.post('/api/products', authenticateToken, requireOwner, async (req, res) => {
@@ -90,6 +130,44 @@ app.get('/api/products/:id', async (req, res) => {
   res.json(item)
 })
 
+// Endpoint untuk menandai produk sebagai terjual (dipanggil saat checkout)
+app.put('/api/products/:id/sold', async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { isSold: true, stock: 0 },
+      { new: true }
+    )
+    
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' })
+    }
+    
+    res.json({ message: 'Product marked as sold', product })
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating product status' })
+  }
+})
+
+// Endpoint untuk mengembalikan produk ke status tersedia (dipanggil saat order dibatalkan)
+app.put('/api/products/:id/available', async (req, res) => {
+  try {
+    const product = await Product.findByIdAndUpdate(
+      req.params.id,
+      { isSold: false, stock: 1 },
+      { new: true }
+    )
+    
+    if (!product) {
+      return res.status(404).json({ message: 'Product not found' })
+    }
+    
+    res.json({ message: 'Product made available again', product })
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating product status' })
+  }
+})
+
 app.put('/api/products/:id', authenticateToken, requireOwner, async (req, res) => {
   const item = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true })
   if (!item) return res.status(404).json({ message: 'Not found' })
@@ -103,6 +181,11 @@ app.delete('/api/products/:id', authenticateToken, requireOwner, async (req, res
 })
 
 app.get('/health', (req, res) => res.json({ ok: true }))
+
+// Test endpoint untuk debugging
+app.get('/api/test', (req, res) => {
+  res.json({ message: 'Product service is working', timestamp: new Date().toISOString() })
+})
 
 async function start() {
   await mongoose.connect(MONGO_URI)
