@@ -720,7 +720,7 @@ function renderRecentOrders(orders) {
     `;
     
     return `
-      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer" onclick="window.location.href='orders.html'">
+      <div class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer" onclick="window.location.href='${isAdmin ? 'admin-orders.html' : 'orders.html'}'">
         <div class="flex items-center gap-4">
           <!-- Product Image -->
           <div class="flex-shrink-0">
