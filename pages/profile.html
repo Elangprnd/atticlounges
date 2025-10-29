@@ -30,6 +30,7 @@
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800">Account Details</h3>
                         <p class="text-gray-700">Member Since: <span id="member-since">N/A</span></p>
+                        <p class="text-gray-700">Tanggal Lahir: <span id="profile-birth-date">Belum diisi</span></p>
                     </div>
                 </div>
             </div>
@@ -84,6 +85,112 @@
                 </div>
             </div>
 
+            <!-- My Orders Section -->
+            <div class="bg-white rounded-xl shadow-sm p-6 mt-8">
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-900" id="orders-title">Pesanan Saya</h2>
+                        <p class="text-sm text-gray-600" id="orders-subtitle">Kelola dan lacak pesanan Anda</p>
+                    </div>
+                    <a href="orders.html" id="orders-link" class="bg-[#DC9C84] text-white px-6 py-2 rounded-lg text-sm font-medium hover:bg-[#93392C] transition flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                        </svg>
+                        <span id="orders-button-text">Lihat Semua Pesanan</span>
+                    </a>
+                </div>
+                
+                <!-- Order Status Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+                    <!-- Pending Orders -->
+                    <div class="bg-white border-l-4 border border-gray-200 rounded-lg p-4 hover:shadow-md hover:bg-pending/10 transition-all" style="border-left-color: #F4C47A !important;">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium" style="color: #FF6B35 !important;">Pending</p>
+                                <p id="pending-count" class="text-2xl font-bold text-gray-900">0</p>
+                            </div>
+                            <div class="bg-pending/10 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-pending" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processing Orders -->
+                    <div class="bg-white border-l-4 border-processing border border-gray-200 rounded-lg p-4 hover:shadow-md hover:bg-processing/10 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-processing">Processing</p>
+                                <p id="processing-count" class="text-2xl font-bold text-gray-900">0</p>
+                            </div>
+                            <div class="bg-processing/10 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-processing" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Shipped Orders -->
+                    <div class="bg-white border-l-4 border-shipped border border-gray-200 rounded-lg p-4 hover:shadow-md hover:bg-shipped/10 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-shipped">Shipped</p>
+                                <p id="shipped-count" class="text-2xl font-bold text-gray-900">0</p>
+                            </div>
+                            <div class="bg-shipped/10 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-shipped" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delivered Orders -->
+                    <div class="bg-white border-l-4 border-delivered border border-gray-200 rounded-lg p-4 hover:shadow-md hover:bg-delivered/10 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-delivered">Delivered</p>
+                                <p id="delivered-count" class="text-2xl font-bold text-gray-900">0</p>
+                            </div>
+                            <div class="bg-delivered/10 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-delivered" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cancelled Orders -->
+                    <div class="bg-white border-l-4 border-cancelled border border-gray-200 rounded-lg p-4 hover:shadow-md hover:bg-cancelled/10 transition-all">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-cancelled">Cancelled</p>
+                                <p id="cancelled-count" class="text-2xl font-bold text-gray-900">0</p>
+                            </div>
+                            <div class="bg-cancelled/10 p-3 rounded-full">
+                                <svg class="w-6 h-6 text-cancelled" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders Preview -->
+                <div class="mt-6" id="recent-orders-section">
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Pesanan Terbaru</h3>
+                    <div id="recent-orders" class="space-y-3">
+                        <!-- Recent orders will be loaded here -->
+                        <div id="loading-orders" class="text-center py-8 text-gray-500">
+                            <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-[#DC9C84] mx-auto mb-3"></div>
+                            <p>Memuat pesanan...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Address Management -->
             <div id="address-section" class="bg-white rounded-xl shadow-sm p-6 mt-8">
                 <div class="flex items-center justify-between mb-4">
@@ -93,6 +200,20 @@
                     </div>
                     <button id="add-address-btn" class="bg-[#DC9C84] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#93392C] transition">Tambah Alamat</button>
                 </div>
+                
+                <!-- Address Required Warning -->
+                <div id="address-warning" class="hidden mb-4 p-4 bg-pending text-status-white border border-gray-200 rounded-lg">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-status-white flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+                        </svg>
+                        <div>
+                            <h3 class="text-sm font-medium text-status-white">Alamat Diperlukan untuk Checkout</h3>
+                            <p class="text-sm text-status-white/90 mt-1">Anda harus menambahkan setidaknya satu alamat pengiriman sebelum dapat melakukan checkout pesanan.</p>
+                        </div>
+                    </div>
+                </div>
+                
                 <div id="address-list" class="space-y-4"></div>
             </div>
         </div>

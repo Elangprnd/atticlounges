@@ -189,22 +189,22 @@ function renderProducts(productList) {
       </div>
 
       <!-- Product Info -->
-      <div class="p-4 flex flex-col gap-2">
+      <div class="p-3 sm:p-4 flex flex-col gap-2">
         <div class="flex items-center justify-between">
           <span class="bg-gray-100 px-2 py-1 text-xs font-medium rounded-full text-gray-600">
             ${product.category}
           </span>
         </div>
-        <h3 class="text-sm font-semibold text-gray-900 line-clamp-2">${product.name}</h3>
-        <p class="text-lg font-bold text-gray-900">Rp ${product.price.toLocaleString("id-ID")}</p>
+        <h3 class="text-sm sm:text-base font-semibold text-gray-900 line-clamp-2">${product.name}</h3>
+        <p class="text-base sm:text-lg font-bold text-gray-900">Rp ${product.price.toLocaleString("id-ID")}</p>
         
         <!-- Action Buttons -->
         <div class="mt-3 flex space-x-2">
-          <button class="view-detail flex-1 text-center rounded-md text-xs py-2 font-medium text-gray-700 bg-white hover:bg-gray-100 border border-gray-300 transition" 
+          <button class="view-detail flex-1 text-center rounded-md text-xs sm:text-sm py-2 font-medium text-gray-700 bg-white hover:bg-gray-100 border border-gray-300 transition" 
                   data-id="${product._id}">
             View Details
           </button>
-          <button class="add-to-cart flex-1 text-center rounded-md text-xs py-2 font-medium text-white ${isSold ? 'bg-gray-400 cursor-not-allowed' : (isAdmin() ? 'bg-[#8C5E3C] hover:bg-[#382E2A]' : 'bg-[#DC9C84] hover:bg-[#93392C]')} transition" 
+          <button class="add-to-cart flex-1 text-center rounded-md text-xs sm:text-sm py-2 font-medium text-white ${isSold ? 'bg-gray-400 cursor-not-allowed' : (isAdmin() ? 'bg-[#8C5E3C] hover:bg-[#382E2A]' : 'bg-[#DC9C84] hover:bg-[#93392C]')} transition" 
                   data-id="${product._id}" ${isSold ? 'disabled' : ''}>
             ${isSold ? 'SOLD OUT' : (isAdmin() ? 'Edit' : 'Add to Cart')}
           </button>
@@ -350,6 +350,11 @@ async function initializePage() {
   const maxPrice = urlParams.get('max');
   
   await fetchProducts();
+  
+  // Initialize search overlay for product page
+  if (typeof initializeSearchOverlay === 'function') {
+    initializeSearchOverlay();
+  }
 
   // Handle search query
   if (searchQuery) {

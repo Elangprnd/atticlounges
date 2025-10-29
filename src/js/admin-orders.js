@@ -8,6 +8,11 @@ let currentFilter = 'all';
 document.addEventListener('DOMContentLoaded', () => {
     loadOrders();
     setupEventListeners();
+    
+    // Initialize search overlay for admin orders page
+    if (typeof initializeSearchOverlay === 'function') {
+        initializeSearchOverlay();
+    }
 });
 
 function setupEventListeners() {
@@ -66,7 +71,32 @@ async function loadOrders() {
         
     } catch (error) {
         console.error('Error loading orders:', error);
-        showMessage('Gagal memuat pesanan. Pastikan Order Service berjalan.', 'error');
+        console.log('Order Service tidak berjalan, mencoba load dari localStorage...');
+        
+        // Try to load from localStorage as fallback
+        loadOrdersFromLocalStorage();
+    }
+}
+
+function loadOrdersFromLocalStorage() {
+    // Get all orders from localStorage (from all users)
+    allOrders = [];
+    
+    // Get all localStorage keys that start with 'orders_'
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('orders_')) {
+            const userOrders = JSON.parse(localStorage.getItem(key) || '[]');
+            allOrders = allOrders.concat(userOrders);
+        }
+    }
+    
+    if (allOrders.length > 0) {
+        updateStats();
+        filterOrders();
+        showMessage(`Memuat ${allOrders.length} pesanan dari localStorage. Pastikan Order Service berjalan untuk data real.`, 'info');
+    } else {
+        showMessage('Tidak ada data pesanan. Pastikan Order Service berjalan atau ada pesanan di localStorage.', 'error');
     }
 }
 
@@ -183,7 +213,7 @@ function renderOrdersTable(orders) {
                 Rp ${order.total.toLocaleString()}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-center">
-                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(order.status)}">
+                <span class="inline-flex px-3 py-1 text-xs font-semibold rounded-full ${getStatusBadgeClass(order.status)}">
                     ${getStatusText(order.status)}
                 </span>
             </td>
@@ -191,7 +221,7 @@ function renderOrdersTable(orders) {
                 ${new Date(order.createdAt).toLocaleDateString()}
             </td>
             <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
-                ${order.status === 'cancelled' 
+                ${order.status === 'cancelled' || order.status === 'delivered'
                     ? '<span class="text-gray-400 text-sm">Final Status</span>' 
                     : `<button onclick="openStatusModal('${order._id}', '${order.status}')" 
                         class="text-[#DC9C84] hover:text-[#93392C] transition">
@@ -206,11 +236,11 @@ function renderOrdersTable(orders) {
 
 function getStatusBadgeClass(status) {
     const classes = {
-        pending: 'bg-yellow-100 text-yellow-800',
-        processing: 'bg-blue-100 text-blue-800',
-        shipped: 'bg-purple-100 text-purple-800',
-        delivered: 'bg-green-100 text-green-800',
-        cancelled: 'bg-red-100 text-red-800'
+        pending: 'bg-white border border-pending text-pending',
+        processing: 'bg-white border border-processing text-processing',
+        shipped: 'bg-white border border-shipped text-shipped',
+        delivered: 'bg-white border border-delivered text-delivered',
+        cancelled: 'bg-white border border-cancelled text-cancelled'
     };
     return classes[status] || 'bg-gray-100 text-gray-800';
 }
@@ -267,6 +297,11 @@ async function updateOrderStatus() {
             allOrders[orderIndex] = updatedOrder;
         }
         
+        // If status is delivered, mark products as sold
+        if (newStatus === 'delivered') {
+            markProductsAsSold(updatedOrder);
+        }
+        
         updateStats();
         filterOrders();
         closeStatusModal();
@@ -277,6 +312,62 @@ async function updateOrderStatus() {
         console.error('Error updating order status:', error);
         showMessage('Gagal mengupdate status pesanan', 'error');
     }
+}
+
+// Mark products as sold when order status is delivered
+function markProductsAsSold(order) {
+    try {
+        if (!order.items || order.items.length === 0) return;
+        
+        console.log('Marking products as sold for delivered order:', order._id);
+        
+        // Update each product in the order
+        order.items.forEach(item => {
+            if (item.productId) {
+                // Update product in localStorage if it exists
+                const productKey = `product_${item.productId}`;
+                const existingProduct = localStorage.getItem(productKey);
+                
+                if (existingProduct) {
+                    const product = JSON.parse(existingProduct);
+                    product.isSold = true;
+                    product.soldTo = order.userId;
+                    product.soldAt = new Date().toISOString();
+                    product.orderId = order._id;
+                    localStorage.setItem(productKey, JSON.stringify(product));
+                    console.log(`Product ${item.productId} marked as sold`);
+                }
+            }
+        });
+        
+        // Also update the order itself to mark as delivered
+        const orderKey = `order_${order._id}`;
+        localStorage.setItem(orderKey, JSON.stringify({
+            ...order,
+            status: 'delivered',
+            deliveredAt: new Date().toISOString()
+        }));
+        
+        // Refresh product list if we're on a product page
+        if (typeof renderProducts === 'function' && typeof fetchProducts === 'function') {
+            setTimeout(() => {
+                fetchProducts().then(products => {
+                    renderProducts(products);
+                });
+            }, 100);
+        }
+        
+        showMessage('Produk telah ditandai sebagai terjual (stock = 0)', 'info');
+        
+    } catch (error) {
+        console.error('Error marking products as sold:', error);
+    }
+}
+
+// Simple message function
+function showMessage(message, type = 'info') {
+    // Create a simple alert for now
+    alert(message);
 }
 
 // Make functions globally available

@@ -16,6 +16,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Update stats
     updateStats();
+    
+    // Initialize search overlay for admin page
+    if (typeof initializeSearchOverlay === 'function') {
+        initializeSearchOverlay();
+    }
 });
 
 // ===== AUTHENTICATION ===== //

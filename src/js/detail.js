@@ -244,4 +244,9 @@ function renderReviews(productId) {
 document.addEventListener("DOMContentLoaded", () => {
   renderProductDetails();
   updateCartCount();
+  
+  // Initialize search overlay for detail page
+  if (typeof initializeSearchOverlay === 'function') {
+    initializeSearchOverlay();
+  }
 });

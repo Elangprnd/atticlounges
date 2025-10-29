@@ -367,6 +367,13 @@ function initializeSearchOverlay() {
   const searchOverlay = document.getElementById("searchOverlay");
   const closeSearch = document.getElementById("closeSearch");
 
+  console.log('Initializing search overlay...', {
+    searchBtn: !!searchBtn,
+    searchOverlay: !!searchOverlay,
+    closeSearch: !!closeSearch,
+    currentPath: window.location.pathname
+  });
+
   // Pastikan hanya jalan kalau semua elemen ada
   if (searchBtn && searchOverlay && closeSearch) {
     // Remove existing listeners to prevent duplicates
@@ -434,7 +441,10 @@ function handleSearchSubmit(e) {
   const input = e.target.querySelector('input[type="search"]');
   if (input && input.value.trim()) {
     const searchQuery = encodeURIComponent(input.value.trim());
-    const targetURL = `pages/product.html?search=${searchQuery}`;
+    
+    // Check if we're already in pages directory
+    const isInPages = window.location.pathname.includes('/pages/');
+    const targetURL = isInPages ? `product.html?search=${searchQuery}` : `pages/product.html?search=${searchQuery}`;
 
     // Tutup overlay (kalau ada)
     const searchOverlay = document.getElementById("searchOverlay");
@@ -511,6 +521,11 @@ function updateCartCount() {
   const cart = getCart();
   const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
   
+  // Debug logging to help identify the issue
+  console.log('Cart items:', cart);
+  console.log('Cart length:', cart.length);
+  console.log('Total items (sum of qty):', totalItems);
+  
   const cartCounts = document.querySelectorAll('#cart-count, #cart-count-user');
   cartCounts.forEach(countEl => {
     if (totalItems > 0) {
@@ -520,6 +535,35 @@ function updateCartCount() {
       countEl.classList.add('hidden');
     }
   });
+}
+
+// ===== CART DATA CLEANUP ===== //
+function cleanupCartData() {
+  const cart = getCart();
+  console.log('Original cart before cleanup:', cart);
+  
+  // Remove any items with invalid data
+  const cleanedCart = cart.filter(item => {
+    return item && 
+           item.name && 
+           typeof item.price === 'number' && 
+           typeof item.qty === 'number' && 
+           item.qty > 0;
+  });
+  
+  // For thrift store, each item should have qty = 1
+  cleanedCart.forEach(item => {
+    item.qty = 1;
+  });
+  
+  console.log('Cleaned cart after cleanup:', cleanedCart);
+  
+  if (cleanedCart.length !== cart.length) {
+    console.log('Cart data was cleaned up, saving changes...');
+    saveCart(cleanedCart);
+  }
+  
+  return cleanedCart;
 }
 
 // ===== WISHLIST MANAGEMENT ===== //
@@ -533,6 +577,23 @@ function saveWishlist(wishlist) {
   const userId = getCurrentUserId();
   const wishlistKey = userId ? `wishlist_${userId}` : 'wishlist_guest';
   localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+  updateWishlistCount();
+}
+
+function updateWishlistCount() {
+  const wishlist = getWishlist();
+  const count = wishlist.length;
+  
+  // Update wishlist counter in navbar
+  const wishlistCounts = document.querySelectorAll('#wishlist-count, #wishlist-count-user');
+  wishlistCounts.forEach(el => {
+    if (count > 0) {
+      el.textContent = count;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
 }
 
 // ===== CATEGORY NAVIGATION ===== //
@@ -781,9 +842,17 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log('Checking login status...');
     checkAndUpdateLoginStatus();
     
+    // Clean up cart data first
+    console.log('Cleaning up cart data...');
+    cleanupCartData();
+    
     // Initialize cart count
     console.log('Initializing cart count...');
     updateCartCount();
+    
+    // Initialize wishlist count
+    console.log('Initializing wishlist count...');
+    updateWishlistCount();
     
     // Initialize search
     console.log('Initializing search...');

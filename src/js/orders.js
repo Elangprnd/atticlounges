@@ -32,19 +32,19 @@ function updateCartCount() {
 function getStatusColor(status) {
   switch (status.toLowerCase()) {
     case 'pending':
-      return 'text-yellow-600 bg-yellow-100';
+      return 'text-pending bg-white border border-pending';
     case 'processing':
-      return 'text-blue-600 bg-blue-100';
+      return 'text-processing bg-white border border-processing';
     case 'shipped':
-      return 'text-purple-600 bg-purple-100';
+      return 'text-shipped bg-white border border-shipped';
     case 'delivered':
     case 'completed':
-      return 'text-green-600 bg-green-100';
+      return 'text-delivered bg-white border border-delivered';
     case 'cancelled':
     case 'canceled':
-      return 'text-red-600 bg-red-100';
+      return 'text-cancelled bg-white border border-cancelled';
     case 'refunded':
-      return 'text-orange-600 bg-orange-100';
+      return 'text-pending bg-white border border-pending';
     default:
       return 'text-gray-600 bg-gray-100';
   }
@@ -146,7 +146,7 @@ async function renderOrders() {
     orderDiv.innerHTML = `
       <div class="flex justify-between items-center mb-4 border-b pb-3">
         <h3 class="text-xl font-semibold text-gray-800">Order ID: ${order.orderId || order._id || 'N/A'}</h3>
-        <span class="text-sm font-medium ${getStatusColor(order.status)} px-3 py-1 rounded-full">
+        <span class="text-sm font-medium ${getStatusColor(order.status)} px-4 py-2 rounded-full">
           ${order.status.charAt(0).toUpperCase() + order.status.slice(1)}
         </span>
       </div>
@@ -168,7 +168,7 @@ async function renderOrders() {
 
       <div class="mt-4">
         <h4 class="font-semibold text-gray-800 mb-2">Payment Method:</h4>
-        <span class="inline-block px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+        <span class="inline-block px-3 py-1 bg-white border border-blue-300 text-blue-600 rounded-full text-sm font-medium">
           ${getPaymentMethodDisplay(order.payment)}
         </span>
       </div>
@@ -219,4 +219,9 @@ document.addEventListener("DOMContentLoaded", () => {
   fixExistingOrdersData();
   renderOrders();
   updateCartCount();
+  
+  // Initialize search overlay for orders page
+  if (typeof initializeSearchOverlay === 'function') {
+    initializeSearchOverlay();
+  }
 });

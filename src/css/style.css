@@ -8,7 +8,7 @@ h1 {
     font-family: 'Josefin Sans', serif;
     font-weight: 600;
     font-style: normal;
-    font-spacing: 0.5em;
+    letter-spacing: 0.5em;
 }
 
 .user.hidden {
@@ -51,4 +51,140 @@ h1 {
 .wishlist-btn.active img {
   transform: scale(1.2);
   transition: transform 0.2s ease;
+}
+
+/* Address validation styling */
+#address-selection {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  transition: border-color 0.2s ease;
+}
+
+#address-selection.border-red-500 {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.address-option {
+  transition: border-color 0.2s ease;
+}
+
+.address-option.border-red-500 {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Fix notification border consistency */
+#address-warning {
+  border: 1px solid #fde68a !important; /* Light yellow border instead of black */
+  max-width: 100%;
+  width: auto;
+}
+
+/* Ensure all warning boxes have consistent styling */
+.bg-yellow-50 {
+  border-color: #fde68a !important;
+}
+
+/* Fix button border consistency */
+button.bg-\[#DC9C84\] {
+  border: 1px solid #DC9C84;
+}
+
+button.bg-\[#DC9C84\]:hover {
+  border-color: #93392C;
+}
+
+/* Custom status colors */
+.bg-pending {
+  background-color: #F4C47A !important;
+}
+
+.bg-processing {
+  background-color: #6B93B9 !important;
+}
+
+.bg-shipped {
+  background-color: #8F80B3 !important;
+}
+
+.bg-delivered {
+  background-color: #91B274 !important;
+}
+
+.bg-cancelled {
+  background-color: #C86B6B !important;
+}
+
+.text-status-white {
+  color: white !important;
+}
+
+/* Custom status text colors - Force override */
+.text-pending {
+  color: #F4C47A !important;
+  color: #F4C47A !important;
+}
+
+.text-processing {
+  color: #6B93B9 !important;
+  color: #6B93B9 !important;
+}
+
+.text-shipped {
+  color: #8F80B3 !important;
+  color: #8F80B3 !important;
+}
+
+.text-delivered {
+  color: #91B274 !important;
+  color: #91B274 !important;
+}
+
+.text-cancelled {
+  color: #C86B6B !important;
+  color: #C86B6B !important;
+}
+
+/* Test colors - more visible */
+.text-pending-test {
+  color: #FF6B35 !important;
+}
+
+.text-processing-test {
+  color: #3B82F6 !important;
+}
+
+.text-shipped-test {
+  color: #8B5CF6 !important;
+}
+
+.text-delivered-test {
+  color: #10B981 !important;
+}
+
+.text-cancelled-test {
+  color: #EF4444 !important;
+}
+
+/* Custom status border colors */
+.border-pending {
+  border-color: #F4C47A !important;
+}
+
+.border-processing {
+  border-color: #6B93B9 !important;
+}
+
+.border-shipped {
+  border-color: #8F80B3 !important;
+}
+
+.border-delivered {
+  border-color: #91B274 !important;
+}
+
+.border-cancelled {
+  border-color: #C86B6B !important;
 }

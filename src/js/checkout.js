@@ -55,6 +55,15 @@ function loadCheckoutItems() {
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div class="space-y-6">
         <div class="bg-white rounded-xl shadow-sm p-6">
+          <h2 class="text-xl font-semibold text-gray-800 mb-4">Alamat Pengiriman</h2>
+          <div id="address-selection" class="space-y-3">
+            <!-- Address options will be loaded here -->
+          </div>
+          <div class="mt-4">
+            <button id="add-new-address" class="text-[#DC9C84] hover:text-[#93392C] text-sm font-medium">+ Tambah Alamat Baru</button>
+          </div>
+        </div>
+        <div class="bg-white rounded-xl shadow-sm p-6">
           <h2 class="text-xl font-semibold text-gray-800 mb-4">Shipping Method</h2>
           <div class="space-y-3">
             <label class="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50"><input type="radio" name="shipping" value="standard" data-cost="10000" class="mr-3" checked><span>Standard (Rp 10.000)</span></label>
@@ -91,6 +100,9 @@ function loadCheckoutItems() {
       </div>
     </div>
   `;
+
+  // Load addresses
+  loadAddressesForCheckout();
 
   // fill items and totals
   const itemsEl = document.getElementById('checkout-items');
@@ -131,9 +143,134 @@ function loadCheckoutItems() {
   document.querySelectorAll('input[name="shipping"]').forEach(r => {
     r.addEventListener('change', recalcTotals);
   });
+
+  // Add event listener for "add new address" button
+  document.getElementById('add-new-address')?.addEventListener('click', () => {
+    window.location.href = 'profile.html';
+  });
 }
 
-// Address form removed — validation not needed here
+// ===== ADDRESS LOADING AND VALIDATION ===== //
+function loadAddressesForCheckout() {
+  const userId = getCurrentUserId();
+  const addressesKey = userId ? `addresses_${userId}` : 'addresses_guest';
+  const addresses = JSON.parse(localStorage.getItem(addressesKey) || '[]');
+  const addressSelection = document.getElementById('address-selection');
+  
+  if (!addressSelection) return;
+  
+  if (addresses.length === 0) {
+    addressSelection.innerHTML = `
+      <div class="p-4 border-2 border-red-300 border-dashed rounded-lg bg-red-50">
+        <div class="text-center">
+          <svg class="w-8 h-8 text-red-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <p class="text-sm text-red-600 font-medium">Tidak ada alamat tersedia</p>
+          <p class="text-xs text-red-500 mt-1">Silakan tambahkan alamat terlebih dahulu</p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  addressSelection.innerHTML = addresses.map((address, index) => `
+    <label class="flex items-start p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 address-option">
+      <input type="radio" name="address" value="${index}" class="mt-1 mr-3" ${index === 0 ? 'checked' : ''}>
+      <div class="flex-1">
+        <div class="font-medium text-gray-900">${address.label || 'Alamat'}</div>
+        <div class="text-sm text-gray-600 mt-1">
+          <div>${address.name} • ${address.phone}</div>
+          <div class="mt-1">${address.address}</div>
+          <div>${address.city}, ${address.province} ${address.postalCode}</div>
+        </div>
+      </div>
+    </label>
+  `).join('');
+  
+  // Add event listener for address selection
+  addressSelection.querySelectorAll('input[name="address"]').forEach(radio => {
+    radio.addEventListener('change', () => {
+      // Remove red border from all address options
+      addressSelection.querySelectorAll('.address-option').forEach(option => {
+        option.classList.remove('border-red-500');
+        option.classList.add('border-gray-300');
+      });
+    });
+  });
+}
+
+function validateAddressSelection() {
+  const selectedAddress = document.querySelector('input[name="address"]:checked');
+  const addressSelection = document.getElementById('address-selection');
+  
+  if (!selectedAddress) {
+    // Add red border to address selection container
+    if (addressSelection) {
+      addressSelection.classList.add('border-red-500');
+      addressSelection.classList.remove('border-gray-300');
+    }
+    return false;
+  }
+  
+  // Remove red border if address is selected
+  if (addressSelection) {
+    addressSelection.classList.remove('border-red-500');
+    addressSelection.classList.add('border-gray-300');
+  }
+  
+  return true;
+}
+
+// ===== ADDRESS VALIDATION ===== //
+function checkUserHasAddress() {
+  const userId = getCurrentUserId();
+  if (!userId) {
+    // For guest users, we might allow checkout without address
+    return true;
+  }
+  
+  const addressesKey = `addresses_${userId}`;
+  const addresses = JSON.parse(localStorage.getItem(addressesKey) || '[]');
+  return addresses.length > 0;
+}
+
+function showAddressRequiredModal() {
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4';
+  modal.innerHTML = `
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-sm mx-auto">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-900">Alamat Diperlukan</h3>
+        <p class="text-sm text-gray-600 mt-1">Anda harus menambahkan alamat di profil sebelum dapat melakukan checkout.</p>
+      </div>
+      <div class="p-6">
+        <div class="flex items-center gap-3 mb-4 p-3 bg-pending text-status-white border border-gray-200 rounded-lg">
+          <svg class="w-5 h-5 text-status-white flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+          </svg>
+          <p class="text-sm text-status-white">Silakan tambahkan alamat pengiriman di halaman profil Anda terlebih dahulu.</p>
+        </div>
+        <div class="flex justify-end gap-3">
+          <button id="cancel-checkout" class="px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-100 text-gray-700">Batal</button>
+          <button id="go-to-profile" class="px-4 py-2 rounded-md bg-[#DC9C84] text-white hover:bg-[#93392C]">Ke Profil</button>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(modal);
+  
+  // Event listeners
+  document.getElementById('cancel-checkout').addEventListener('click', () => {
+    document.body.removeChild(modal);
+  });
+  
+  document.getElementById('go-to-profile').addEventListener('click', () => {
+    document.body.removeChild(modal);
+    window.location.href = 'profile.html';
+  });
+}
 
 // ===== PLACE ORDER ===== //
 async function placeOrder() {
@@ -142,7 +279,19 @@ async function placeOrder() {
     return;
   }
 
-  // Address form removed; assume profile holds shipping details
+  // Validate address selection
+  if (!validateAddressSelection()) {
+    // Show error message
+    const addressSelection = document.getElementById('address-selection');
+    if (addressSelection) {
+      addressSelection.classList.add('border-red-500');
+      addressSelection.classList.remove('border-gray-300');
+    }
+    
+    // Show notification
+    showAddressRequiredModal();
+    return;
+  }
 
   // Get form data
   const userId = getCurrentUserId();
@@ -218,4 +367,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Place order button
   document.getElementById("place-order-btn")?.addEventListener("click", placeOrder);
+  
+  // Initialize search overlay for checkout page
+  if (typeof initializeSearchOverlay === 'function') {
+    initializeSearchOverlay();
+  }
 });

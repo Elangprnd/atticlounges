@@ -105,22 +105,22 @@
 
             <!-- Filter Buttons -->
             <div class="flex flex-wrap gap-3 mb-8">
-                <button id="filter-all-btn" class="px-4 py-2 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
+                <button id="filter-all-btn" class="px-4 py-2 bg-white border-2 border-[#8C5E3C] text-[#8C5E3C] hover:bg-[#8C5E3C] hover:text-white rounded-lg font-medium transition">
                     All Orders
                 </button>
-                <button id="filter-pending-btn" class="px-4 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
+                <button id="filter-pending-btn" class="px-4 py-2 bg-white border-2 border-pending text-pending hover:bg-pending hover:text-white rounded-lg font-medium transition">
                     Pending
                 </button>
-                <button id="filter-processing-btn" class="px-4 py-2 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
+                <button id="filter-processing-btn" class="px-4 py-2 bg-white border-2 border-processing text-processing hover:bg-processing hover:text-white rounded-lg font-medium transition">
                     Processing
                 </button>
-                <button id="filter-shipped-btn" class="px-4 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
+                <button id="filter-shipped-btn" class="px-4 py-2 bg-white border-2 border-shipped text-shipped hover:bg-shipped hover:text-white rounded-lg font-medium transition">
                     Shipped
                 </button>
-                <button id="filter-delivered-btn" class="px-4 py-2 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
+                <button id="filter-delivered-btn" class="px-4 py-2 bg-white border-2 border-delivered text-delivered hover:bg-delivered hover:text-white rounded-lg font-medium transition">
                     Delivered
                 </button>
-                <button id="filter-cancelled-btn" class="px-4 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-lg font-medium transition">
+                <button id="filter-cancelled-btn" class="px-4 py-2 bg-white border-2 border-cancelled text-cancelled hover:bg-cancelled hover:text-white rounded-lg font-medium transition">
                     Cancelled
                 </button>
             </div>
@@ -154,33 +154,35 @@
     </main>
 
     <!-- Status Update Modal -->
-    <div id="status-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 relative">
+    <div id="status-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl p-6 sm:p-8 relative">
             <button id="close-status-modal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
             
-            <h2 class="text-2xl font-semibold mb-6 text-center">Update Order Status</h2>
+            <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-center">Update Order Status</h2>
             
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Order ID</label>
-                <input type="text" id="modal-order-id" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4 sm:mb-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Order ID</label>
+                    <input type="text" id="modal-order-id" readonly class="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-sm sm:text-base">
+                </div>
+                
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">New Status</label>
+                    <select id="new-status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84] text-sm sm:text-base">
+                        <option value="pending">Pending</option>
+                        <option value="processing">Processing</option>
+                        <option value="shipped">Shipped</option>
+                        <option value="delivered">Delivered</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
             </div>
             
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">New Status</label>
-                <select id="new-status" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]">
-                    <option value="pending">Pending</option>
-                    <option value="processing">Processing</option>
-                    <option value="shipped">Shipped</option>
-                    <option value="delivered">Delivered</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-            </div>
-            
-            <div class="flex justify-end space-x-4">
-                <button type="button" id="cancel-status" class="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition">
+            <div class="flex flex-col sm:flex-row justify-end gap-3 sm:gap-4">
+                <button type="button" id="cancel-status" class="w-full sm:w-auto px-4 sm:px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition text-sm sm:text-base">
                     Cancel
                 </button>
-                <button type="button" id="update-status" class="px-6 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-md transition">
+                <button type="button" id="update-status" class="w-full sm:w-auto px-4 sm:px-6 py-2 bg-[#DC9C84] hover:bg-[#93392C] text-white rounded-md transition text-sm sm:text-base">
                     Update Status
                 </button>
             </div>

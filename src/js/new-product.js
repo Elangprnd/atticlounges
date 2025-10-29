@@ -50,9 +50,9 @@ function updateCartCount() {
     if (totalItems > 0) {
       el.textContent = totalItems;
       el.classList.remove('hidden');
-      el.classList.remove('bg-red-500');
-      el.classList.add('text-gray-800', 'font-semibold');
-    } else el.classList.add('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
   });
 }
 
@@ -67,6 +67,23 @@ function saveWishlist(wishlist) {
   const userId = getCurrentUserId();
   const wishlistKey = userId ? `wishlist_${userId}` : 'wishlist_guest';
   localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+  updateWishlistCount();
+}
+
+function updateWishlistCount() {
+  const wishlist = getWishlist();
+  const count = wishlist.length;
+  
+  // Update wishlist counter in navbar
+  const wishlistCounts = document.querySelectorAll('#wishlist-count, #wishlist-count-user');
+  wishlistCounts.forEach(el => {
+    if (count > 0) {
+      el.textContent = count;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
 }
 
 // ===== FETCH PRODUCTS ===== //
@@ -125,6 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 1. Inisialisasi hitungan keranjang
     updateCartCount();
+    
+    // 2. Inisialisasi hitungan wishlist
+    updateWishlistCount();
 
     // 2. Test API connection first
     testAPIConnection().then(() => {
@@ -217,7 +237,7 @@ async function renderProducts(productList) {
                         </div>` : ''}
 
                         ${!isAdmin() && !isSold ? `<button 
-                            class="wishlist-btn absolute top-2 right-2 bg-white/80 backdrop-blur-md rounded-full p-2 shadow hover:bg-red-100 transition"
+                            class="wishlist-btn absolute top-2 right-2 bg-white/80 backdrop-blur-md rounded-full p-2 shadow hover:bg-red-50 transition"
                             data-id="${idStr}">
                             <img src="${wishlistIcon}" alt="Wishlist" class="w-5 h-5">
                         </button>` : ''}
@@ -364,11 +384,11 @@ function toggleWishlist(productId, btn) {
   if (isWishlisted) {
     // Hapus dari wishlist
     wishlist.splice(index, 1);
-    img.src = "https://cdn-icons-png.flaticon.com/128/833/833472.png"; // hati kosong 🤍
+    img.src = "https://cdn-icons-png.flaticon.com/128/833/833300.png"; // hati kosong 🤍
   } else {
     // Tambahkan ke wishlist
     wishlist.push(idStr);
-    img.src = "https://cdn-icons-png.flaticon.com/128/833/833300.png"; // hati penuh ❤️
+    img.src = "https://cdn-icons-png.flaticon.com/128/833/833472.png"; // hati penuh ❤️
   }
 
   saveWishlist(wishlist);

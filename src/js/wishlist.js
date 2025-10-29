@@ -15,6 +15,23 @@ function saveWishlist(list) {
   const userId = getCurrentUserId();
   const key = userId ? `wishlist_${userId}` : 'wishlist_guest';
   localStorage.setItem(key, JSON.stringify(list));
+  updateWishlistCount();
+}
+
+function updateWishlistCount() {
+  const wishlist = getWishlist();
+  const count = wishlist.length;
+  
+  // Update wishlist counter in navbar
+  const wishlistCounts = document.querySelectorAll('#wishlist-count, #wishlist-count-user');
+  wishlistCounts.forEach(el => {
+    if (count > 0) {
+      el.textContent = count;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
 }
 
 function getCart() {
@@ -117,7 +134,13 @@ async function renderWishlist() {
 
 document.addEventListener('DOMContentLoaded', () => {
   updateCartCount();
+  updateWishlistCount();
   renderWishlist();
+  
+  // Initialize search overlay for wishlist page
+  if (typeof initializeSearchOverlay === 'function') {
+    initializeSearchOverlay();
+  }
 });
 
 

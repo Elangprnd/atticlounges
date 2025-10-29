@@ -13,7 +13,7 @@
 <body class="bg-gray-50">
     <!-- Unified header injected by src/js/header.js -->
 
-    <!-- Main Content -->
+<!-- Main Content -->
     <main class="min-h-screen">
         <!-- Page Header -->
         <section class="bg-white py-8">
@@ -26,22 +26,22 @@
         <!-- Filter Section -->
         <section class="bg-white border-b py-4">
             <div class="container mx-auto px-6">
-                <div class="flex flex-wrap gap-4 items-center">
-                    <select id="category-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <select id="category-filter" class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
                         <option value="">All Categories</option>
                         <option value="Fashion">Fashion</option>
                         <option value="Accessories">Accessories</option>
                         <option value="Elektronik">Electronics</option>
                         <option value="Buku">Books</option>
                     </select>
-                    <select id="price-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                    <select id="price-filter" class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
                         <option value="">All Prices</option>
                         <option value="0-100000">Under Rp 100,000</option>
                         <option value="100000-200000">Rp 100,000 - 200,000</option>
                         <option value="200000-300000">Rp 200,000 - 300,000</option>
                         <option value="300000+">Above Rp 300,000</option>
                     </select>
-                    <select id="sort-filter" class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
+                    <select id="sort-filter" class="w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#DC9C84] focus:border-[#DC9C84]">
                         <option value="name">Sort by Name</option>
                         <option value="price-low">Price: Low to High</option>
                         <option value="price-high">Price: High to Low</option>
@@ -51,8 +51,8 @@
         </section>
 
         <!-- Products Grid -->
-        <section class="py-8">
-            <div class="container mx-auto px-6">
+        <section class="py-6 sm:py-8">
+            <div class="container mx-auto px-4 sm:px-6">
                 <div id="results-info" class="flex flex-wrap items-center justify-between gap-3 mb-4 hidden">
                     <div class="text-sm text-gray-700">
                         <span id="active-search" class="hidden">Results for <span class="font-semibold"></span></span>
@@ -115,7 +115,7 @@
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
                                placeholder="Masukkan password admin">
                     </div>
-                    <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                    <button type="submit" class="w-full px-6 py-3 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
                         Masuk sebagai Admin
                     </button>
                 </form>

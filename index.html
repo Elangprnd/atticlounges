@@ -15,81 +15,7 @@
 
 <body>
     
-    <!-- Navigation Bar --> 
-    <header id="mainHeader" class="fixed top-0 left-0 w-full z-50 bg-white/60 backdrop-blur-md shadow-sm border-b border-gray-200">
-        <nav class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
-
-            <!-- Kiri: Logo -->
-            <div class="flex items-center gap-2">
-            <img id="logo" src="src/img/Attic Lounges.png" alt="AtticLounges logo" class="h-8 w-auto md:h-10 object-contain" />
-            </div>
-
-            <!-- Tengah: Navigation Links -->
-            <ul class="hidden md:flex items-center justify-center gap-8 font-medium text-[18px] text-gray-700">
-                <li><a href="#hero-section" class="hover:text-gray-900 transition-colors duration-200">HOME</a></li>
-                <li><a href="pages/product.html" class="hover:text-gray-900 transition-colors duration-200">PRODUCT</a></li>
-                <li><a href="#categories-section" class="hover:text-gray-900 transition-colors duration-200" onclick="handleCategoryClick(event)">CATEGORY</a></li>
-                <li>
-                    <button id="searchBtn" class="hover:text-gray-900 transition-colors duration-200 flex items-center">
-                        <img src="https://cdn-icons-png.flaticon.com/128/3031/3031293.png" alt="Search Icon" class="w-5 h-5 object-contain"/>
-                    </button>
-                </li>
-            </ul>
-
-            <!-- Kanan: Cart, Like, Chat, Manage Product, Profile, Dropdown Profile -->
-            <div id="headerRight" class="flex items-center gap-4">
-                
-                <div id="guestButtons" class="flex items-center gap-2">
-                    <button id="login" class="px-4 py-1.5 rounded-[4px] text-base font-bold hover:text-[#382E2A] text-[#8C5E3C] transition">LOGIN</button>
-                    <button id="sign-up" class="px-4 py-1.5 rounded-[4px] text-sm font-medium bg-[#8C5E3C] hover:bg-[#382E2A] text-white shadow-md transition">SIGN UP</button>
-                </div>
-
-                <div id="userButtons" class="hidden items-center flex gap-4">
-                    <a href="pages/cart.html" id="cartBtn" class="relative hover:text-gray-900 transition">
-                        <img src="https://cdn-icons-png.flaticon.com/128/1170/1170678.png" alt="" class="w-6 h-6">
-                        <span id="cart-count-user" class="hidden absolute -top-1 -right-2 bg-red-500 text-white text-[10px] leading-none px-1.5 py-0.5 rounded-full"></span>
-                    </a>
-                    <a href="pages/wishlist.html" id="heartBtn" class="hover:text-gray-900 transition">
-                        <img src="https://cdn-icons-png.flaticon.com/128/1077/1077035.png" alt="" class="w-6 h-6">
-                    </a>
-                    <a href="pages/chat.html" id="chatBtn" class="hover:text-gray-900 transition">
-                        <img src="https://cdn-icons-png.flaticon.com/128/9458/9458241.png" alt="" class="w-6 h-6">
-                    </a>
-                </div>
-
-                <div id="adminButtons" class="hidden items-center gap-4">
-                    <button id="manage-products-btn-user" class="px-5 py-2 text-sm font-semibold bg-[#382E2A] text-white rounded-[5px] hover:bg-[#8C5E3C] transition-all duration-200 shadow-sm">Manage Products</button>
-                </div>
-
-                <div id="universalProfile" class="relative group hidden"> 
-                    <button id="my-account-btn" class="flex items-center gap-2 px-4 py-1 rounded-md text-sm font-medium border border-gray-300 hover:bg-gray-100 transition">
-                        <img id="profile-img" src="https://res.cloudinary.com/dxf64h9fe/image/upload/v1760354998/download_13_z7b0lk.jpg" alt="User" class="w-7 h-7 rounded-full">
-                        <span id="profile-text">Account</span>
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                        </svg>
-                    </button>
-                    <div id="account-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 hidden"></div>
-                </div>
-            </div>
-
-
-            </div>
-        </nav>
-    </header>
-
-    <!-- Search Overlay -->
-    <div id="searchOverlay" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm flex flex-col items-center pt-28 z-40">
-        <div class="bg-white w-full max-w-3xl mx-auto p-6 rounded-2xl shadow-lg relative">
-            <form>
-                <input type="search" placeholder="Search products..." class="w-full p-3 text-gray-700 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-400" />
-            </form>
-            <button id="closeSearch" class="absolute top-1 right-2 text-gray-400 hover:text-gray-700 transition text-lg font-semibold">&times;</button>
-        </div>
-    </div>
-
-    <!-- ====== SPACER supaya konten di bawah nggak ketutupan ====== -->
-    <div class="h-16 md:h-20 bg-[#EDE0D4]"></div>
+    <!-- Unified header injected by src/js/header.js -->
 
     <!-- Login Modal -->
     <div id="loginModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
@@ -153,7 +79,7 @@
                                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
                                    placeholder="Masukkan password admin">
                         </div>
-                        <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                        <button type="submit" class="w-full px-6 py-3 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
                             Masuk sebagai Admin
                         </button>
                     </form>
@@ -215,12 +141,12 @@
 
     <main>
         <!-- New Product -->
-        <section class="py-14 px-4 md:px-6 text-center bg-[#EDE0D4]">
+        <section class="py-14 px-6 sm:px-8 md:px-6 text-center bg-[#EDE0D4]">
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-widest uppercase mb-10 text-[#382E2A]">New Arrival</h1>
 
             <div class="relative max-w-7xl mx-auto">
                 <!-- Tombol kiri -->
-                <button class="nav-btn absolute -left-8 md:-left-12 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg border border-gray-200 z-10 hover:bg-gray-100 transition-transform hover:scale-110" onclick="scrollProducts('prev')">
+                <button class="nav-btn hidden md:flex absolute -left-8 md:-left-12 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 items-center justify-center shadow-md hover:shadow-lg border border-gray-200 z-10 hover:bg-gray-100 transition-transform hover:scale-110" onclick="scrollProducts('prev')">
                     <img class="w-5 h-5" src="https://cdn-icons-png.flaticon.com/128/271/271220.png" alt="Previous">
                 </button>
 
@@ -230,7 +156,7 @@
                 </div>
 
                 <!-- Tombol kanan -->
-                <button class="nav-btn absolute -right-8 md:-right-12 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-md hover:shadow-lg border border-gray-200 z-10 hover:bg-gray-100 transition-transform hover:scale-110" onclick="scrollProducts('next')">
+                <button class="nav-btn hidden md:flex absolute -right-8 md:-right-12 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 items-center justify-center shadow-md hover:shadow-lg border border-gray-200 z-10 hover:bg-gray-100 transition-transform hover:scale-110" onclick="scrollProducts('next')">
                     <img class="w-5 h-5" src="https://cdn-icons-png.flaticon.com/128/271/271228.png" alt="Next">
                 </button>
             </div>
@@ -261,7 +187,7 @@
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Under Rp 100.000</p>
                     </div>
-                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Buku'">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Books'">
                         <img src="https://i.pinimg.com/1200x/af/c2/8c/afc28cb871c7134bfd23578b3489db90.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Books</p> 
@@ -276,7 +202,7 @@
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Above Rp 300.000</p>
                     </div>
-                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Elektronik'">
+                    <div class="relative group cursor-pointer" onclick="window.location.href='pages/product.html?category=Electronics'">
                         <img src="https://i.pinimg.com/736x/54/3f/d0/543fd0eab594c0d0da8aea6580d7a24f.jpg" class="w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition">
                         <div class="absolute inset-0 bg-black opacity-50 w-full h-56 object-cover rounded-lg shadow-lg group-hover:scale-105 transition"></div>
                         <p class="absolute bottom-3 left-3 text-white px-3 py-1 rounded text-xl font-medium">Electronics</p>
@@ -385,6 +311,7 @@
         </div>
     </footer>
 
+    <script src="src/js/header.js"></script>
     <script>
         // Let the main app.js handle login status checking
         console.log('Index.html loaded - login status will be checked by app.js');

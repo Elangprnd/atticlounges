@@ -95,7 +95,7 @@ function createReviewModal() {
     modal.id = 'review-modal';
     modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50';
     modal.innerHTML = `
-        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl p-8 relative max-h-[90vh] overflow-y-auto">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-2xl mx-auto p-8 relative max-h-[90vh] overflow-y-auto">
             <!-- Close Button -->
             <button id="close-review-modal" class="absolute top-3 right-3 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
 

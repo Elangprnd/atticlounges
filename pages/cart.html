@@ -15,8 +15,8 @@
     <!-- Unified header injected by src/js/header.js -->
 
     <!-- Main Content -->
-    <main class="min-h-screen py-8 pb-32">
-        <div class="container px-6 mx-auto max-w-4xl">
+    <main class="min-h-screen py-6 sm:py-8 pb-32">
+        <div class="container px-4 sm:px-6 mx-auto max-w-4xl">
             <!-- Page Header -->
             <div class="mb-8 text-center">
                 <h1 class="text-3xl font-bold text-gray-800 mb-2">Shopping Cart</h1>
@@ -31,13 +31,13 @@
             </div>
 
             <!-- Cart Items - Centered -->
-            <div id="cart-items" class="w-full bg-white shadow-md rounded-2xl p-6 space-y-4"></div>
+            <div id="cart-items" class="w-full bg-white shadow-md rounded-xl p-3 sm:p-6 space-y-2 border border-gray-100"></div>
         </div>
     </main>
 
     <!-- Cart Summary - Fixed at Bottom Center -->
-    <div id="cart-summary" class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-6 z-10">
-        <div class="max-w-4xl mx-auto">
+    <div id="cart-summary" class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 p-4 sm:p-6 z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-0">
             <div class="flex justify-between text-gray-700 mb-2">
                 <span>Selected Items:</span>
                 <span id="summary-item-count">0</span>
@@ -51,9 +51,9 @@
                 <span>Total:</span>
                 <span id="total-price">Rp 0</span>
             </div>
-            <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <button id="delete-selected" class="px-6 py-3 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 font-semibold transition">Delete Selected</button>
-                <button id="checkout" class="px-8 py-3 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] font-semibold shadow-md transition">Checkout Now</button>
+            <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
+                <button id="delete-selected" class="w-full sm:w-auto px-5 py-3 bg-white border border-red-300 text-red-600 rounded-lg hover:bg-red-50 font-semibold transition">Delete Selected</button>
+                <button id="checkout" class="w-full sm:w-auto px-8 py-3 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] font-semibold shadow-md transition">Checkout Now</button>
             </div>
         </div>
     </div>
@@ -103,7 +103,7 @@
                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#DC9C84]"
                                placeholder="Masukkan password admin">
                     </div>
-                    <button type="submit" class="w-full px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition">
+                    <button type="submit" class="w-full px-6 py-3 bg-[#8C5E3C] hover:bg-[#382E2A] text-white rounded-lg font-medium transition">
                         Masuk sebagai Admin
                     </button>
                 </form>

@@ -179,6 +179,11 @@ document.addEventListener('DOMContentLoaded', () => {
   userInput?.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') handleSend();
   });
+  
+  // Initialize search overlay for chat page
+  if (typeof initializeSearchOverlay === 'function') {
+    initializeSearchOverlay();
+  }
 });
 
 
