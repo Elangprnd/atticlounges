@@ -313,6 +313,21 @@ function getReviews() {
         localStorage.setItem('reviews', JSON.stringify(reviews));
     }
     
+    // Check if we need to update sample reviews (for fixing product names)
+    const hasOldSampleData = reviews.some(review => 
+        review.items && review.items[0] && 
+        (review.items[0].name === 'Classic White Shirt' || 
+         review.items[0].name === 'High-Waist Jeans' || 
+         review.items[0].name === 'Vintage Denim Jacket' || 
+         review.items[0].name === 'Casual T-Shirt')
+    );
+    
+    if (hasOldSampleData) {
+        // Replace with corrected sample reviews
+        reviews = createSampleReviews();
+        localStorage.setItem('reviews', JSON.stringify(reviews));
+    }
+    
     return reviews;
 }
 
@@ -327,7 +342,7 @@ function createSampleReviews() {
             rating: 5,
             review: 'Produknya sangat bagus! Kualitas bahan premium dan desain yang elegan. Pasti akan beli lagi.',
             createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(), // 2 days ago
-            items: [{ name: 'High-Waist Jeans', price: 180000 }],
+            items: [{ name: 'Digital Camera', price: 180000 }],
             reviewPhoto: 'https://res.cloudinary.com/do3t3ubyd/image/upload/v1761276538/download_10_vvlbuy.jpg'
         },
         {
@@ -338,7 +353,7 @@ function createSampleReviews() {
             rating: 4,
             review: 'Pengiriman cepat dan packaging rapi. Produk sesuai dengan deskripsi. Recommended!',
             createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(), // 5 days ago
-            items: [{ name: 'Vintage Denim Jacket', price: 250000 }],
+            items: [{ name: 'Nike Air Force 1', price: 250000 }],
             reviewPhoto: 'https://res.cloudinary.com/do3t3ubyd/image/upload/v1761276514/download_12_apm2fh.jpg'
         },
         {
@@ -349,7 +364,7 @@ function createSampleReviews() {
             rating: 5,
             review: 'Customer service sangat responsif dan membantu. Produk berkualitas tinggi dengan harga yang reasonable.',
             createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(), // 7 days ago
-            items: [{ name: 'Classic White Shirt', price: 120000 }],
+            items: [{ name: 'Fujifilm Instax Camera', price: 120000 }],
             reviewPhoto: 'https://res.cloudinary.com/do3t3ubyd/image/upload/v1761276506/download_11_drxvbn.jpg'
         },
         {
@@ -360,7 +375,7 @@ function createSampleReviews() {
             rating: 4,
             review: 'Sizing guide sangat akurat. Produk sesuai ekspektasi dan nyaman dipakai.',
             createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(), // 10 days ago
-            items: [{ name: 'Casual T-Shirt', price: 95000 }],
+            items: [{ name: 'Samsung Galaxy Watch', price: 95000 }],
             reviewPhoto: 'https://res.cloudinary.com/do3t3ubyd/image/upload/v1761276483/Galaxy_Watch_FE__Samsung_lancia_uno_smartwatch_entry-level_dal_prezzo_contenuto_qvjmhq.jpg'
         },
         {

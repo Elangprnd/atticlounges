@@ -583,7 +583,7 @@ function loadAllUserOrders() {
 }
 
 // ===== ORDER SUMMARY FUNCTIONALITY ===== //
-function loadOrderSummary() {
+async function loadOrderSummary() {
   const userId = getCurrentUserId();
   const user = JSON.parse(localStorage.getItem('user') || '{}');
   const isAdmin = user.role === 'owner' || localStorage.getItem('isAdmin') === 'true';
@@ -598,11 +598,45 @@ function loadOrderSummary() {
   let orders = [];
   
   if (isAdmin) {
-    // For admin, load orders from all users
-    orders = loadAllUserOrders();
+    // For admin, prefer backend data to ensure statuses are up to date
+    try {
+      const response = await fetch('http://localhost:4003/api/admin/orders', {
+        cache: 'no-store',
+        headers: { 'Cache-Control': 'no-cache' }
+      });
+      if (response.ok) {
+        orders = await response.json();
+        console.log('Admin orders fetched from API:', orders.length);
+      } else {
+        console.warn('Failed to fetch admin orders from API, status:', response.status);
+        orders = loadAllUserOrders();
+      }
+    } catch (error) {
+      console.warn('Error fetching admin orders from API, falling back to localStorage:', error);
+      orders = loadAllUserOrders();
+    }
   } else {
-    // For regular users, load only their orders
-    orders = JSON.parse(localStorage.getItem(`orders_${userId}`) || '[]');
+    // For regular users, prefer backend (same source as My Orders page)
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) throw new Error('No token');
+      const response = await fetch('http://localhost:4003/api/orders', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Cache-Control': 'no-cache'
+        }
+      });
+      if (response.ok) {
+        orders = await response.json();
+        console.log('User orders fetched from API:', orders.length);
+      } else {
+        console.warn('Failed to fetch user orders from API, status:', response.status);
+        orders = JSON.parse(localStorage.getItem(`orders_${userId}`) || '[]');
+      }
+    } catch (error) {
+      console.warn('Error fetching user orders from API, falling back to localStorage:', error);
+      orders = JSON.parse(localStorage.getItem(`orders_${userId}`) || '[]');
+    }
   }
   
   console.log('Found orders:', orders);

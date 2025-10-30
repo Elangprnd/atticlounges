@@ -76,13 +76,14 @@ function renderCart() {
           class="select-item mt-1 w-5 h-5 text-[#DC9C84] border-gray-300 focus:ring-[#DC9C84] flex-shrink-0"
           data-index="${index}" />
 
-        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 cursor-pointer hover:bg-gray-200 transition-colors"
+          data-index="${index}">
           <img src="${item.image}"
             alt="${item.name}"
             class="w-full h-full object-cover" />
         </div>
 
-        <div class="flex-1 min-w-0">
+        <div class="flex-1 min-w-0 cursor-pointer hover:bg-gray-50 p-2 -m-2 rounded transition-colors" data-index="${index}">
           <p class="font-medium text-gray-800 leading-tight line-clamp-2 text-base sm:text-lg">${item.name}</p>
           <p class="text-gray-700 mt-1 font-semibold text-base sm:text-lg">${formatPrice(item.price)}</p>
         </div>
@@ -123,6 +124,27 @@ function addCartEventListeners() {
   // Selection
   document.querySelectorAll('.select-item').forEach(cb => {
     cb.addEventListener('change', updateSelectedSummary);
+  });
+
+  // Click on product area to toggle selection
+  document.querySelectorAll('[data-index]').forEach(element => {
+    // Skip if it's the checkbox itself or delete button
+    if (element.classList.contains('select-item') || element.classList.contains('delete-btn')) {
+      return;
+    }
+    
+    element.addEventListener('click', (e) => {
+      // Prevent event bubbling to avoid conflicts
+      e.stopPropagation();
+      
+      const index = parseInt(element.dataset.index);
+      const checkbox = document.querySelector(`input[data-index="${index}"]`);
+      
+      if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateSelectedSummary();
+      }
+    });
   });
 }
 

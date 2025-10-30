@@ -54,6 +54,44 @@ function saveWishlist(wishlist) {
   localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
 }
 
+function updateWishlistCount() {
+  const wishlist = getWishlist();
+  const count = wishlist.length;
+  
+  // Update wishlist counter in navbar
+  const wishlistCounts = document.querySelectorAll('#wishlist-count, #wishlist-count-user');
+  wishlistCounts.forEach(el => {
+    if (count > 0) {
+      el.textContent = count;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
+}
+
+function getCart() {
+  const userId = getCurrentUserId();
+  const key = userId ? `cart_${userId}` : 'cart_guest';
+  return JSON.parse(localStorage.getItem(key) || '[]');
+}
+
+function isInCart(productId) {
+  const pid = String(productId);
+  return getCart().some(it => String(it._id ?? it.id) === pid);
+}
+
+function getUserOrdersLocal() {
+  const userId = getCurrentUserId();
+  if (!userId) return [];
+  try { return JSON.parse(localStorage.getItem(`orders_${userId}`) || '[]'); } catch (_) { return []; }
+}
+
+function isInOrders(productId) {
+  const pid = String(productId);
+  return getUserOrdersLocal().some(o => Array.isArray(o.items) && o.items.some(it => String(it._id ?? it.id) === pid));
+}
+
 // ===== SAMPLE REVIEWS ===== //
 const productReviews = [
   {
@@ -190,15 +228,25 @@ async function renderProductDetails() {
         alert('Admin tidak bisa menambah produk ke wishlist!');
         return;
       }
+      // Prevent if already in cart or already ordered
+      const key = product._id || product.id;
+      if (isInCart(key)) {
+        alert('Produk sudah ada di keranjang. Hapus dari keranjang dahulu jika ingin memindahkan ke wishlist.');
+        return;
+      }
+      if (isInOrders(key)) {
+        alert('Produk sudah ada pada pesanan Anda. Tidak bisa ditambahkan ke wishlist.');
+        return;
+      }
       
       let wishlist = getWishlist();
-      const key = product._id || product.id;
       if (wishlist.includes(key)) {
         wishlist = wishlist.filter(id => id !== key);
       } else {
         wishlist.push(key);
       }
       saveWishlist(wishlist);
+      updateWishlistCount();
       renderProductDetails(); // Re-render to update wishlist icon
     });
   }
@@ -244,6 +292,7 @@ function renderReviews(productId) {
 document.addEventListener("DOMContentLoaded", () => {
   renderProductDetails();
   updateCartCount();
+  updateWishlistCount();
   
   // Initialize search overlay for detail page
   if (typeof initializeSearchOverlay === 'function') {

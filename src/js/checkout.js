@@ -348,9 +348,21 @@ async function placeOrder() {
   orders.push(orderData);
   localStorage.setItem(ordersKey, JSON.stringify(orders));
 
-  // Clear cart using multi-user system
+  // Remove only checked out items from cart, keep remaining items
   const cartKey = userId ? `cart_${userId}` : 'cart_guest';
-  localStorage.removeItem(cartKey);
+  const currentCart = JSON.parse(localStorage.getItem(cartKey)) || [];
+  
+  // Get IDs of items that were checked out
+  const checkedOutIds = checkoutItems.map(item => item._id || item.id || item.productId);
+  
+  // Filter out checked out items from cart
+  const remainingCart = currentCart.filter(item => {
+    const itemId = item._id || item.id || item.productId;
+    return !checkedOutIds.includes(itemId);
+  });
+  
+  // Save remaining cart items
+  localStorage.setItem(cartKey, JSON.stringify(remainingCart));
   localStorage.removeItem('checkoutItems');
 
   // Show success message

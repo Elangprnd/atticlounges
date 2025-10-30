@@ -29,6 +29,28 @@ function isAdmin() {
   return user.role === 'owner' || localStorage.getItem('isAdmin') === 'true';
 }
 
+// Read user orders from localStorage (same shape as orders page fallback)
+function getUserOrdersLocal() {
+  const userId = getCurrentUserId();
+  if (!userId) return [];
+  try {
+    return JSON.parse(localStorage.getItem(`orders_${userId}`) || '[]');
+  } catch (_) {
+    return [];
+  }
+}
+
+function isInCart(productId) {
+  const pid = String(productId);
+  return getCart().some(it => String(it._id ?? it.id) === pid);
+}
+
+function isInOrders(productId) {
+  const pid = String(productId);
+  const orders = getUserOrdersLocal();
+  return orders.some(o => Array.isArray(o.items) && o.items.some(it => String(it._id ?? it.id) === pid));
+}
+
 function updateCartCount() {
   const cart = getCart();
   const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
@@ -55,6 +77,22 @@ function saveWishlist(wishlist) {
   const userId = getCurrentUserId();
   const wishlistKey = userId ? `wishlist_${userId}` : 'wishlist_guest';
   localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+}
+
+function updateWishlistCount() {
+  const wishlist = getWishlist();
+  const count = wishlist.length;
+  
+  // Update wishlist counter in navbar
+  const wishlistCounts = document.querySelectorAll('#wishlist-count, #wishlist-count-user');
+  wishlistCounts.forEach(el => {
+    if (count > 0) {
+      el.textContent = count;
+      el.classList.remove('hidden');
+    } else {
+      el.classList.add('hidden');
+    }
+  });
 }
 
 // ===== SEARCH FUNCTIONALITY ===== //
@@ -127,6 +165,9 @@ async function filterProducts() {
 async function fetchProducts() {
   try {
     const resp = await fetch('http://localhost:4002/api/products');
+    if (!resp.ok) {
+      throw new Error(`HTTP error! status: ${resp.status}`);
+    }
     allProducts = await resp.json();
     return allProducts;
   } catch (e) {
@@ -146,7 +187,21 @@ function renderProducts(productList) {
   updateResultsInfo(productList);
 
   if (!productList || productList.length === 0) {
-    if (noProducts) noProducts.classList.remove('hidden');
+    if (noProducts) {
+      noProducts.classList.remove('hidden');
+      // Check if this is due to API error
+      if (allProducts.length === 0) {
+        noProducts.innerHTML = `
+          <div class="text-center py-8">
+            <p class="text-red-500 mb-4">Failed to load products. Make sure Product Service is running on port 4002.</p>
+            <p class="text-sm text-gray-500 mb-4">The Electronics and Books categories cannot be filtered without the product service.</p>
+            <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] transition">
+              Retry
+            </button>
+          </div>
+        `;
+      }
+    }
     return;
   }
 
@@ -277,6 +332,15 @@ function addProductEventListeners() {
       }
       
       const productId = e.currentTarget.dataset.id;
+      // Prevent adding to wishlist if already in cart or in any order
+      if (isInCart(productId)) {
+        alert('Produk sudah ada di keranjang. Hapus dari keranjang dahulu jika ingin memindahkan ke wishlist.');
+        return;
+      }
+      if (isInOrders(productId)) {
+        alert('Produk sudah ada pada pesanan Anda. Tidak bisa ditambahkan ke wishlist.');
+        return;
+      }
       let wishlist = getWishlist();
 
       if (wishlist.includes(productId)) {
@@ -286,6 +350,7 @@ function addProductEventListeners() {
       }
 
       saveWishlist(wishlist);
+      updateWishlistCount();
       renderProducts(filteredProducts.length ? filteredProducts : allProducts);
     });
   });
@@ -341,6 +406,7 @@ function updateResultsInfo(list) {
 // ===== INITIALIZE PAGE ===== //
 async function initializePage() {
   updateCartCount();
+  updateWishlistCount();
 
   const urlParams = new URLSearchParams(window.location.search);
   const searchQuery = urlParams.get('search');

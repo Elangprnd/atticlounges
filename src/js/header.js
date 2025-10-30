@@ -25,7 +25,7 @@
             </svg>
           </button>
           <!-- Logo -->
-          <img id="logo" src="${base}/src/img/Attic%20Lounges.png" alt="AtticLounges logo" class="h-8 w-auto md:h-10 object-contain" />
+          <img id="logo" src="${base}/src/img/Attic%20Lounges.png" alt="AtticLounges logo" class="h-6 w-auto sm:h-8 md:h-10 object-contain" />
         </div>
 
         <!-- Desktop Navigation Menu -->
@@ -41,25 +41,25 @@
         </ul>
 
         <!-- Right Side Buttons -->
-        <div id="headerRight" class="flex items-center gap-4">
+        <div id="headerRight" class="flex items-center gap-2 sm:gap-4">
           <!-- Guest Buttons -->
-          <div id="guestButtons" class="flex items-center gap-2">
-            <button id="login" class="px-4 py-1.5 rounded-[4px] text-base font-bold hover:text-[#382E2A] text-[#8C5E3C] transition">LOGIN</button>
-            <button id="sign-up" class="px-4 py-1.5 rounded-[4px] text-sm font-medium bg-[#8C5E3C] hover:bg-[#382E2A] text-white shadow-md transition">SIGN UP</button>
+          <div id="guestButtons" class="flex items-center gap-1 sm:gap-2">
+            <button id="login" class="px-2 sm:px-4 py-1.5 rounded-[4px] text-xs sm:text-base font-bold hover:text-[#382E2A] text-[#8C5E3C] transition">LOGIN</button>
+            <button id="sign-up" class="px-2 sm:px-4 py-1.5 rounded-[4px] text-xs sm:text-sm font-medium bg-[#8C5E3C] hover:bg-[#382E2A] text-white shadow-md transition">SIGN UP</button>
           </div>
           
           <!-- User Buttons -->
-          <div id="userButtons" class="hidden items-center flex gap-4">
+          <div id="userButtons" class="hidden items-center flex gap-2 sm:gap-4">
             <a href="${pageHref('cart.html')}" id="cartBtn" class="relative hover:text-gray-900 transition">
-              <img src="https://cdn-icons-png.flaticon.com/128/1170/1170678.png" alt="Cart" class="w-6 h-6">
+              <img src="https://cdn-icons-png.flaticon.com/128/1170/1170678.png" alt="Cart" class="w-5 h-5 sm:w-6 sm:h-6 object-contain">
               <span id="cart-count-user" class="hidden absolute -top-1 -right-2 bg-red-500 text-white text-[10px] leading-none px-1.5 py-0.5 rounded-full"></span>
             </a>
             <a href="${pageHref('wishlist.html')}" id="heartBtn" class="relative hover:text-gray-900 transition">
-              <img src="https://cdn-icons-png.flaticon.com/128/1077/1077035.png" alt="Wishlist" class="w-6 h-6">
+              <img src="https://cdn-icons-png.flaticon.com/128/1077/1077035.png" alt="Wishlist" class="w-5 h-5 sm:w-6 sm:h-6 object-contain">
               <span id="wishlist-count-user" class="hidden absolute -top-1 -right-2 bg-red-500 text-white text-[10px] leading-none px-1.5 py-0.5 rounded-full"></span>
             </a>
             <a href="${pageHref('chat.html')}" id="chatBtn" class="hover:text-gray-900 transition">
-              <img src="https://cdn-icons-png.flaticon.com/128/9458/9458241.png" alt="Chat" class="w-6 h-6">
+              <img src="https://cdn-icons-png.flaticon.com/128/9458/9458241.png" alt="Chat" class="w-5 h-5 sm:w-6 sm:h-6 object-contain">
             </a>
           </div>
 
@@ -137,6 +137,18 @@
       @media (min-width: 1280px) {
         #mainHeader {
           background: rgba(255,255,255,0.98);
+        }
+      }
+      /* Ensure icons maintain aspect ratio and don't get squashed */
+      #mainHeader img {
+        flex-shrink: 0;
+        object-fit: contain;
+        max-width: none;
+      }
+      /* Responsive header padding */
+      @media (max-width: 640px) {
+        #mainHeader nav {
+          padding: 0.75rem 1rem;
         }
       }
     `;
