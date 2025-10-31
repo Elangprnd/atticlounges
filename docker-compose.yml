@@ -1,0 +1,75 @@
+version: "3.9"
+
+services:
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  product-service:
+    build: ./services/product-service
+    container_name: product-service
+    restart: unless-stopped
+    environment:
+      - PORT=4002
+      - MONGO_URI=mongodb://mongo:27017/product_service
+    depends_on:
+      - mongo
+    ports:
+      - "4002:4002"
+
+  order-service:
+    build: ./services/order-service
+    container_name: order-service
+    restart: unless-stopped
+    environment:
+      - PORT=4003
+      - MONGO_URI=mongodb://mongo:27017/order_service
+      - PRODUCT_SERVICE_URL=http://product-service:4002
+    depends_on:
+      - mongo
+      - product-service
+    ports:
+      - "4003:4003"
+
+  user-service:
+    build: ./services/user-service
+    container_name: user-service
+    restart: unless-stopped
+    environment:
+      - PORT=4001
+      - MONGO_URI=mongodb://mongo:27017/user_service
+    depends_on:
+      - mongo
+    ports:
+      - "4001:4001"
+
+  ai-service:
+    build: ./services/ai-service
+    container_name: ai-service
+    restart: unless-stopped
+    environment:
+      - PORT=4004
+    ports:
+      - "4004:4004"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: frontend
+    restart: unless-stopped
+    depends_on:
+      - product-service
+      - order-service
+      - user-service
+    ports:
+      - "8080:80"
+
+volumes:
+  mongo_data:
+    driver: local

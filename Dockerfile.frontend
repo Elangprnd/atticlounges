@@ -1,0 +1,15 @@
+# Simple static frontend using NGINX
+FROM nginx:alpine
+
+# Copy site contents to Nginx public dir
+COPY . /usr/share/nginx/html/
+
+# Remove files not needed in the served document root
+RUN rm -rf /usr/share/nginx/html/services /usr/share/nginx/html/src/js/*.test.* || true
+
+EXPOSE 80
+
+# Use the default nginx.conf; can be customized later if needed
+CMD ["nginx", "-g", "daemon off;"]
+
+
