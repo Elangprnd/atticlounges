@@ -1,0 +1,27 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "services/user-service/src/index.js", "use": "@vercel/node" },
+    { "src": "services/product-service/src/index.js", "use": "@vercel/node" },
+    { "src": "services/order-service/src/index.js", "use": "@vercel/node" },
+    { "src": "services/ai-service/src/index.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/auth/(.*)", "dest": "services/user-service/src/index.js" },
+    { "src": "/api/users/(.*)", "dest": "services/user-service/src/index.js" },
+    { "src": "/api/debug/(.*)", "dest": "services/user-service/src/index.js" },
+    
+    { "src": "/api/products", "dest": "services/product-service/src/index.js" },
+    { "src": "/api/products/(.*)", "dest": "services/product-service/src/index.js" },
+    
+    { "src": "/api/cart/(.*)", "dest": "services/order-service/src/index.js" },
+    { "src": "/api/orders", "dest": "services/order-service/src/index.js" },
+    { "src": "/api/orders/(.*)", "dest": "services/order-service/src/index.js" },
+    { "src": "/api/admin/orders", "dest": "services/order-service/src/index.js" },
+    { "src": "/api/admin/orders/(.*)", "dest": "services/order-service/src/index.js" },
+    { "src": "/api/admin/cleanup-orders", "dest": "services/order-service/src/index.js" },
+    
+    { "src": "/api/chat", "dest": "services/ai-service/src/index.js" },
+    { "src": "/api/models", "dest": "services/ai-service/src/index.js" }
+  ]
+}
