@@ -1,6 +1,8 @@
 {
   "cleanUrls": true,
   "rewrites": [
+    { "source": "/api/auth/login", "destination": "/api/auth/login.js" },
+    { "source": "/api/auth/register", "destination": "/api/auth/register.js" },
     { "source": "/api/auth/(.*)", "destination": "/api/auth.js" },
     { "source": "/api/users/(.*)", "destination": "/api/auth.js" },
     { "source": "/api/debug/(.*)", "destination": "/api/auth.js" },
