@@ -160,14 +160,14 @@ function setupReviewEventListeners() {
     
     // Star rating (delegated event listeners)
     document.addEventListener('click', (e) => {
-        if (e.target.classList.contains('star-btn')) {
+        if (e.target && e.target.classList && e.target.classList.contains('star-btn')) {
             currentRating = parseInt(e.target.dataset.rating);
             updateStarDisplay();
         }
     });
     
     document.addEventListener('mouseenter', (e) => {
-        if (e.target.classList.contains('star-btn')) {
+        if (e.target && e.target.classList && e.target.classList.contains('star-btn')) {
             highlightStars(parseInt(e.target.dataset.rating));
         }
     }, true);
