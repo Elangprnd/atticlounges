@@ -144,31 +144,21 @@
         <section class="py-14 px-6 sm:px-8 md:px-6 text-center bg-[#EDE0D4]">
             <h1 class="text-4xl md:text-5xl font-extrabold tracking-wide uppercase mb-10 text-[#382E2A]">New Arrival</h1>
 
-            <div class="relative max-w-7xl mx-auto">
+            <div class="relative max-w-7xl mx-auto px-4">
                 <!-- Tombol kiri -->
-                <button class="nav-btn hidden md:flex absolute -left-8 md:-left-12 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 items-center justify-center shadow-md hover:shadow-lg border border-gray-200 z-10 hover:bg-gray-100 transition-transform hover:scale-110" onclick="scrollProducts('prev')">
-                    <img class="w-5 h-5" src="https://cdn-icons-png.flaticon.com/128/271/271220.png" alt="Previous">
+                <button class="nav-btn hidden md:flex absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 bg-white rounded-full w-12 h-12 items-center justify-center shadow-lg hover:shadow-xl border border-gray-200 z-20 hover:bg-gray-100 transition-all hover:scale-110 active:scale-95" onclick="scrollProducts('prev')">
+                    <img class="w-6 h-6" src="https://cdn-icons-png.flaticon.com/128/271/271220.png" alt="Previous">
                 </button>
 
                 <!-- List produk -->
-                <div id="productList" class="flex overflow-x-auto gap-5 md:gap-6 pb-4 scrollbar-hide snap-x snap-mandatory scroll-smooth">
-                    <p class="text-center w-full">Memuat produk...</p>
+                <div id="productList" class="flex overflow-x-auto gap-6 pb-8 scrollbar-hide snap-x snap-mandatory scroll-smooth">
+                    <p class="text-center w-full py-10 text-gray-500">Memuat koleksi terbaru...</p>
                 </div>
 
                 <!-- Tombol kanan -->
-                <button class="nav-btn hidden md:flex absolute -right-8 md:-right-12 top-1/2 -translate-y-1/2 bg-white rounded-full w-10 h-10 items-center justify-center shadow-md hover:shadow-lg border border-gray-200 z-10 hover:bg-gray-100 transition-transform hover:scale-110" onclick="scrollProducts('next')">
-                    <img class="w-5 h-5" src="https://cdn-icons-png.flaticon.com/128/271/271228.png" alt="Next">
+                <button class="nav-btn hidden md:flex absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 bg-white rounded-full w-12 h-12 items-center justify-center shadow-lg hover:shadow-xl border border-gray-200 z-20 hover:bg-gray-100 transition-all hover:scale-110 active:scale-95" onclick="scrollProducts('next')">
+                    <img class="w-6 h-6" src="https://cdn-icons-png.flaticon.com/128/271/271228.png" alt="Next">
                 </button>
-            </div>
-        </section>
-
-        <!-- Products Grid -->
-        <section class="py-4">
-            <div class="container mx-auto px-6">
-                <div id="product-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
-                <div id="no-products" class="text-center py-12 hidden">
-                    <p class="text-gray-500 text-lg">No products found matching your criteria.</p>
-                </div>
             </div>
         </section>
 

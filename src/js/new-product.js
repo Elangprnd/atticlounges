@@ -222,42 +222,44 @@ async function renderProducts(productList) {
                 const priceFormatted = formatRupiah(product.price); // Gunakan formatRupiah
 
                 return `
-                <div class="product-card flex-shrink-0 w-72 md:w-[280px] bg-white p-4 shadow-lg border border-gray-100 rounded-[5px] text-left snap-start ${isSold ? 'opacity-75' : ''}">
+                <div class="product-card flex-shrink-0 w-[280px] bg-white p-4 shadow-md hover:shadow-xl border border-gray-100 rounded-xl text-left snap-start transition-all duration-300 ${isSold ? 'opacity-75' : ''}">
 
-                    <div class="relative h-64 mb-3 overflow-hidden flex items-center justify-center bg-gray-100">
+                    <div class="relative h-64 mb-4 overflow-hidden rounded-lg bg-gray-100 group">
                         <img 
                             src="${imageUrl}" 
                             alt="${productName}" 
-                            class="object-cover w-full h-full"
+                            class="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
                             onerror="this.onerror=null; this.src='https://via.placeholder.com/280x250?text=Gagal+Memuat+Gambar';"
                         >
 
-                        ${isSold ? `<div class="absolute top-2 left-2 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold shadow-md">
-                            SOLD
+                        ${isSold ? `<div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <span class="bg-red-600 text-white px-4 py-1 rounded-full text-sm font-bold shadow-lg">SOLD</span>
                         </div>` : ''}
 
                         ${!isAdmin() && !isSold ? `<button 
-                            class="wishlist-btn absolute top-2 right-2 bg-white/80 backdrop-blur-md rounded-full p-2 shadow hover:bg-red-50 transition"
+                            class="wishlist-btn absolute top-3 right-3 bg-white/90 backdrop-blur-sm rounded-full p-2 shadow-md hover:bg-white hover:scale-110 transition-all z-10"
                             data-id="${idStr}">
                             <img src="${wishlistIcon}" alt="Wishlist" class="w-5 h-5">
                         </button>` : ''}
                     </div>
 
-                    <span class="inline-block bg-[#E4CDA7] rounded-[5px] px-2 py-1 text-xs font-semibold uppercase mb-2">
-                        ${categoryName}
-                    </span>
-                    
-                    <h3 class="text-lg font-bold uppercase truncate mb-1">${productName}</h3>
-                    
-                    <p class="text-red-700 text-lg font-semibold mb-4">${priceFormatted}</p>
-                    
-                    <div class="flex space-x-2">
-                        <button class="view-detail flex-1 px-3 py-2 text-sm text-[#382E2A] border border-[#382E2A] hover:bg-gray-100 rounded-[5px] text-center transition duration-150" data-id="${idStr}">
-                            View Detail
-                        </button>
-                        <button class="add-to-cart flex-1 px-3 py-2 text-sm ${isSold ? 'bg-gray-400 cursor-not-allowed' : (isAdmin() ? 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]' : 'bg-[#8C5E3C] text-white hover:bg-[#382E2A]')} rounded-[5px] transition duration-150" data-id="${idStr}" ${isSold ? 'disabled' : ''}>
-                            ${isSold ? 'SOLD OUT' : (isAdmin() ? 'Edit' : 'Add To Cart')}
-                        </button>
+                    <div class="space-y-2">
+                        <span class="inline-block bg-[#F3E5D8] text-[#8C5E3C] rounded-full px-3 py-0.5 text-[10px] font-bold uppercase tracking-wider">
+                            ${categoryName}
+                        </span>
+                        
+                        <h3 class="text-base font-bold text-gray-800 line-clamp-1 h-6">${productName}</h3>
+                        
+                        <p class="text-[#93392C] text-lg font-extrabold">${priceFormatted}</p>
+                        
+                        <div class="flex space-x-2 pt-2">
+                            <button class="view-detail flex-1 px-3 py-2.5 text-xs font-bold text-[#382E2A] border-2 border-[#382E2A] hover:bg-[#382E2A] hover:text-white rounded-lg text-center transition-all duration-200" data-id="${idStr}">
+                                DETAILS
+                            </button>
+                            <button class="add-to-cart flex-1 px-3 py-2.5 text-xs font-bold ${isSold ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-[#DC9C84] text-white hover:bg-[#93392C] shadow-md hover:shadow-lg'} rounded-lg transition-all duration-200" data-id="${idStr}" ${isSold ? 'disabled' : ''}>
+                                ${isSold ? 'SOLD OUT' : (isAdmin() ? 'EDIT' : 'ADD TO CART')}
+                            </button>
+                        </div>
                     </div>
                 </div>`;
             })

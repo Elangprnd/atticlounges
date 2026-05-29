@@ -323,11 +323,17 @@ async function placeOrder() {
   try {
     // Try to send order to Order Service
     const token = localStorage.getItem('token');
+    if (!token) {
+      alert('Anda harus login untuk melakukan pemesanan');
+      window.location.href = '../index.html';
+      return;
+    }
+
     const response = await fetch('/api/orders', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(orderData)
     });
@@ -336,10 +342,13 @@ async function placeOrder() {
       const savedOrder = await response.json();
       console.log('Order saved to backend:', savedOrder);
     } else {
-      console.warn('Failed to save order to backend, saving locally');
+      const err = await response.json();
+      throw new Error(err.message || 'Failed to save order to backend');
     }
   } catch (error) {
-    console.warn('Order service not available, saving locally:', error);
+    console.error('Order creation error:', error);
+    alert('Gagal membuat pesanan di server: ' + error.message);
+    return; // Don't proceed if server-side order fails
   }
 
   // Always save to localStorage as backup (per user)
