@@ -20,6 +20,19 @@ const pool = new Pool({
 async function initDb() {
   try {
     await pool.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";')
+    
+    // Create categories table
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS categories (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        name VARCHAR(255) UNIQUE NOT NULL,
+        image TEXT,
+        description TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `)
+
+    // Create products table
     await pool.query(`
       CREATE TABLE IF NOT EXISTS products (
         id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -63,22 +76,46 @@ const requireOwner = (req, res, next) => {
   next()
 }
 
+async function seedCategoriesIfEmpty() {
+  try {
+    const { rows } = await pool.query('SELECT count(*) FROM categories')
+    if (parseInt(rows[0].count) > 0) return
+    
+    const categories = [
+      { name: 'Fashion', image: 'https://i.pinimg.com/1200x/ea/0a/13/ea0a13bdc7d5ba10d3801bd95e866768.jpg', description: 'Trendi and stylish clothing' },
+      { name: 'Books', image: 'https://i.pinimg.com/1200x/af/c2/8c/afc28cb871c7134bfd23578b3489db90.jpg', description: 'Curated collection of books' },
+      { name: 'Accessories', image: 'https://i.pinimg.com/1200x/fa/b8/cd/fab8cdfc5af40c894dff84544e6f9dfa.jpg', description: 'Complete your look' },
+      { name: 'Electronics', image: 'https://i.pinimg.com/736x/54/3f/d0/543fd0eab594c0d0da8aea6580d7a24f.jpg', description: 'Gadgets and tech' }
+    ]
+    
+    for (const c of categories) {
+      await pool.query(
+        'INSERT INTO categories (name, image, description) VALUES ($1, $2, $3) ON CONFLICT (name) DO NOTHING',
+        [c.name, c.image, c.description]
+      )
+    }
+    console.log('Seeded categories')
+  } catch (error) {
+    console.error('Seeding categories error:', error);
+  }
+}
+
 async function seedProductsIfEmpty() {
   const { rows } = await pool.query('SELECT count(*) FROM products')
   if (parseInt(rows[0].count) > 0) return
   
   const defaults = [
-    { name: 'Selamat Tinggal - Tere Liye', category: 'Buku', price: 70000, image: 'https://i.pinimg.com/736x/99/7c/74/997c7452cd8405547fb0775d3d5aae87.jpg', description: 'Novel terbaru dari Tere Liye yang mengisahkan tentang perjalanan hidup yang penuh makna.', condition: 'Good', size: 'One Size', brand: 'Gramedia' },
-    { name: 'Laut Bercerita - Leila S. Chudori', category: 'Buku', price: 85000, image: 'https://i.pinimg.com/1200x/b4/71/f8/b471f81470297a93aae8bc706c81ee7c.jpg', description: 'Novel sejarah yang mengisahkan tentang perjuangan dan pengorbanan di masa lalu.', condition: 'Excellent', size: 'One Size', brand: 'Kepustakaan Populer Gramedia' },
+    { name: 'Selamat Tinggal - Tere Liye', category: 'Books', price: 70000, image: 'https://i.pinimg.com/736x/99/7c/74/997c7452cd8405547fb0775d3d5aae87.jpg', description: 'Novel terbaru dari Tere Liye yang mengisahkan tentang perjalanan hidup yang penuh makna.', condition: 'Good', size: 'One Size', brand: 'Gramedia' },
+    { name: 'Laut Bercerita - Leila S. Chudori', category: 'Books', price: 85000, image: 'https://i.pinimg.com/1200x/b4/71/f8/b471f81470297a93aae8bc706c81ee7c.jpg', description: 'Novel sejarah yang mengisahkan tentang perjuangan dan pengorbanan di masa lalu.', condition: 'Excellent', size: 'One Size', brand: 'Kepustakaan Populer Gramedia' },
     { name: 'Hoodie Dino', category: 'Fashion', price: 120000, image: 'https://i.pinimg.com/1200x/cb/0d/30/cb0d300987439aa123c1a8cd59dbdd5a.jpg', description: 'Hoodie dengan motif dinosaurus yang lucu dan nyaman dipakai sehari-hari.', condition: 'Very Good', size: 'L', brand: 'Uniqlo' },
-    { name: 'Headphone Wireless', category: 'Elektronik', price: 250000, image: 'https://i.pinimg.com/1200x/b5/16/64/b51664b1e415e856171d408e69a33c7a.jpg', description: 'Headphone wireless dengan kualitas suara yang jernih dan baterai tahan lama.', condition: 'Like New', size: 'One Size', brand: 'Sony' },
+    { name: 'Headphone Wireless', category: 'Electronics', price: 250000, image: 'https://i.pinimg.com/1200x/b5/16/64/b51664b1e415e856171d408e69a33c7a.jpg', description: 'Headphone wireless dengan kualitas suara yang jernih dan baterai tahan lama.', condition: 'Like New', size: 'One Size', brand: 'Sony' },
     { name: 'Vintage Denim Jacket', category: 'Fashion', price: 150000, image: 'https://i.pinimg.com/1200x/c0/2b/dd/c02bddac3a2ad03ceec74b86dc0e7d3e.jpg', description: 'Jaket denim vintage dengan potongan klasik yang timeless.', condition: 'Excellent', size: 'M', brand: "Levi's" },
     { name: 'Designer Handbag', category: 'Accessories', price: 450000, image: 'https://i.pinimg.com/1200x/22/c5/7b/22c57b231bfe81ec1802624fe152f7bb.jpg', description: 'Tas designer dengan kualitas premium dan desain yang elegan.', condition: 'Like New', size: 'One Size', brand: 'Coach' },
     { name: 'Graphic T-Shirt', category: 'Fashion', price: 75000, image: 'https://i.pinimg.com/1200x/61/2c/f8/612cf8de92a9ea8f813b9f0042102ee7.jpg', description: 'Kaos dengan desain grafis yang unik dan bahan yang nyaman.', condition: 'Good', size: 'L', brand: 'Uniqlo' },
     { name: 'Midi Skirt', category: 'Fashion', price: 120000, image: 'https://i.pinimg.com/736x/69/bb/b0/69bbb06902a057ca8d280f9f79f4594e.jpg', description: 'Rok midi dengan potongan yang flattering dan cocok untuk berbagai acara.', condition: 'Excellent', size: 'S', brand: 'Zara' },
     { name: 'High-Waist Jeans', category: 'Fashion', price: 180000, image: 'https://i.pinimg.com/1200x/27/70/82/27708210401730b2fca2221086cc7d98.jpg', description: 'Jeans high-waist dengan fit yang sempurna dan warna yang timeless.', condition: 'Very Good', size: 'M', brand: 'H&M' },
     { name: 'Leather Crossbody Bag', category: 'Accessories', price: 200000, image: 'https://i.pinimg.com/1200x/fc/3e/1d/fc3e1d20167f4de35e4709b1dce1656d.jpg', description: 'Tas crossbody kulit dengan desain yang praktis dan stylish.', condition: 'Good', size: 'One Size', brand: 'Fossil' },
-    { name: 'Wireless Headphones', category: 'Elektronik', price: 300000, image: 'https://i.pinimg.com/1200x/b5/16/64/b51664b1e415e856171d408e69a33c7a.jpg', description: 'Headphone wireless dengan noise cancellation dan kualitas suara premium.', condition: 'Like New', size: 'One Size', brand: 'Sony' },
+    { name: 'Wireless Headphones', category: 'Electronics', price: 300000, image: 'https://i.pinimg.com/1200x/b5/16/64/b51664b1e415e856171d408e69a33c7a.jpg', description: 'Headphone wireless dengan noise cancellation dan kualitas suara premium.', condition: 'Like New', size: 'One Size', brand: 'Sony' },
     { name: 'Vintage Watch', category: 'Accessories', price: 350000, image: 'https://i.pinimg.com/1200x/2f/21/5b/2f215b7168faeed4201923fe8c8273cc.jpg', description: 'Jam tangan vintage dengan strap kulit dan desain yang timeless.', condition: 'Excellent', size: 'One Size', brand: 'Seiko' }
   ]
   
@@ -98,6 +135,7 @@ async function ensureDb() {
   if (dbInitialized) return;
   try {
     await initDb();
+    await seedCategoriesIfEmpty();
     await seedProductsIfEmpty();
     dbInitialized = true;
     console.log('Database ensured and ready');
@@ -106,6 +144,16 @@ async function ensureDb() {
     throw err;
   }
 }
+
+app.get('/api/categories', async (req, res) => {
+  try {
+    await ensureDb();
+    const { rows } = await pool.query('SELECT * FROM categories ORDER BY name ASC')
+    res.json(rows)
+  } catch (e) {
+    res.status(500).json({ message: 'Server error' })
+  }
+})
 
 app.get('/api/products', async (req, res) => {
   try {
@@ -124,6 +172,7 @@ app.get('/api/products', async (req, res) => {
 
 app.get('/api/products/all', async (req, res) => {
   try {
+    await ensureDb();
     const { rows } = await pool.query('SELECT * FROM products ORDER BY created_at DESC LIMIT 50')
     res.json(rows)
   } catch (e) {
@@ -248,7 +297,7 @@ app.get('/api/test', (req, res) => {
 })
 
 if (process.env.NODE_ENV !== 'test') {
-  initDb().then(() => seedProductsIfEmpty()).catch(console.error)
+  initDb().then(() => seedCategoriesIfEmpty()).then(() => seedProductsIfEmpty()).catch(console.error)
 }
 
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
