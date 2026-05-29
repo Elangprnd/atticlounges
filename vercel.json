@@ -1,11 +1,5 @@
 {
-  "version": 2,
-  "functions": {
-    "services/user-service/src/index.js": { "runtime": "@vercel/node" },
-    "services/product-service/src/index.js": { "runtime": "@vercel/node" },
-    "services/order-service/src/index.js": { "runtime": "@vercel/node" },
-    "services/ai-service/src/index.js": { "runtime": "@vercel/node" }
-  },
+  "cleanUrls": true,
   "rewrites": [
     { "source": "/api/auth/(.*)", "destination": "/services/user-service/src/index.js" },
     { "source": "/api/users/(.*)", "destination": "/services/user-service/src/index.js" },
