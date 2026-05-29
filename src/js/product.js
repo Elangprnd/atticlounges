@@ -193,10 +193,10 @@ function renderProducts(productList) {
       if (allProducts.length === 0) {
         noProducts.innerHTML = `
           <div class="text-center py-8">
-            <p class="text-red-500 mb-4">Failed to load products. Make sure Product Service is running on port 4002.</p>
-            <p class="text-sm text-gray-500 mb-4">The Electronics and Books categories cannot be filtered without the product service.</p>
+            <p class="text-red-500 mb-4">Gagal memuat produk. Pastikan Product Service berjalan.</p>
+            <p class="text-sm text-gray-500 mb-4">Kategori Elektronik dan Buku tidak dapat difilter tanpa layanan produk.</p>
             <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] transition">
-              Retry
+              Coba Lagi
             </button>
           </div>
         `;

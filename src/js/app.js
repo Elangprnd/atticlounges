@@ -139,7 +139,7 @@ async function handleUserLogin(e) {
   } catch (error) {
     console.error('User login error:', error);
     const msg = (error && error.message && error.message.includes('Failed to fetch'))
-      ? 'Gagal terhubung ke User Service (4001). Pastikan backend berjalan.'
+      ? 'Gagal terhubung ke User Service. Pastikan server berjalan.'
       : (error.message || 'Gagal login. Coba lagi.');
     showMessage(msg, 'error');
   }
@@ -185,7 +185,7 @@ async function handleSignup(e) {
   } catch (error) {
     console.error('Registration error:', error);
     const msg = (error && error.message && error.message.includes('Failed to fetch'))
-      ? 'Gagal terhubung ke User Service (4001). Pastikan backend berjalan.'
+      ? 'Gagal terhubung ke User Service. Pastikan server berjalan.'
       : (error.message || 'Gagal mendaftar. Coba lagi.');
     showMessage(msg, 'error');
   }
@@ -261,7 +261,7 @@ async function handleAdminLogin(e) {
   } catch (error) {
     console.error('Admin login error:', error);
     const msg = (error && error.message && error.message.includes('Failed to fetch'))
-      ? 'Gagal terhubung ke User Service (4001). Pastikan backend berjalan.'
+      ? 'Gagal terhubung ke User Service. Pastikan server berjalan.'
       : (error.message || 'Gagal login admin.');
     showMessage(msg, 'error');
   }
@@ -672,10 +672,10 @@ async function renderProducts(productList) {
     console.error('Failed to fetch products', e);
     container.innerHTML = `
       <div class="text-center py-8">
-        <p class="text-red-500 mb-4">Failed to load products. Make sure Product Service is running on port 4002.</p>
+        <p class="text-red-500 mb-4">Gagal memuat produk. Pastikan Product Service berjalan.</p>
         <p class="text-sm text-gray-500">Error: ${e.message}</p>
         <button onclick="location.reload()" class="mt-4 px-4 py-2 bg-[#DC9C84] text-white rounded-lg hover:bg-[#93392C] transition">
-          Retry
+          Coba Lagi
         </button>
       </div>
     `;
@@ -914,11 +914,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   // Quick health check for backend services
   ;(async () => {
+    // Skip health check if on production (Vercel) to avoid 404 alerts
+    if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') return;
+    
     try {
       const resp = await fetch(`${USER_SERVICE}/health`);
       if (!resp.ok) throw new Error('User service unhealthy');
     } catch (e) {
-      showMessage('User Service tidak tersedia di :4001. Jalankan services/user-service.', 'error');
+      showMessage('User Service tidak tersedia. Jalankan services/user-service.', 'error');
     }
   })();
   // Footer year
