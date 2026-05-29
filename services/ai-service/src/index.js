@@ -10,13 +10,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const PORT = process.env.PORT;
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
-// Initialize Groq client
-const groq = new Groq({
-  apiKey: GROQ_API_KEY,
-});
+// Initialize Groq client with a check
+const getGroqClient = () => {
+  if (!process.env.GROQ_API_KEY) {
+    console.error('❌ GROQ_API_KEY is missing!');
+    return null;
+  }
+  return new Groq({ apiKey: process.env.GROQ_API_KEY });
+};
 
 // System prompt for Attic Lounges chatbot
 const SYSTEM_PROMPT = `Kamu adalah Atticbot, asisten AI yang ramah untuk Attic Lounges, toko thrift preloved. 
@@ -70,6 +73,9 @@ app.post('/api/chat', async (req, res) => {
     ];
 
     // Call Groq API
+    const groq = getGroqClient();
+    if (!groq) throw new Error('AI Client not initialized');
+
     const completion = await groq.chat.completions.create({
       messages: messages,
       model: 'llama-3.1-8b-instant', // Fast and efficient model

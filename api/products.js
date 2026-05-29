@@ -3,14 +3,18 @@ import { parse } from 'url';
 
 export default async (req, res) => {
   const { pathname } = parse(req.url, true);
-  
-  // Extract ID from /api/products/ID
   const parts = pathname.split('/');
   const id = parts[parts.length - 1];
   
-  // If it's a detail request (ID is present and not 'products')
-  if (id && id !== 'products' && id !== 'all' && id !== 'test') {
-    req.params = { ...req.params, id };
+  // Cleanly route specific product IDs and special actions
+  if (id && id !== 'products' && id !== 'all' && id !== 'categories' && id !== 'test') {
+    // If it's a sub-path like /api/products/ID/sold, handle the ID
+    if (parts[parts.length - 2] === 'products') {
+      req.params = { ...req.params, id };
+    } else if (parts[parts.length - 3] === 'products') {
+      // For /api/products/ID/sold
+      req.params = { ...req.params, id: parts[parts.length - 2] };
+    }
   }
   
   return app(req, res);
