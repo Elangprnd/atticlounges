@@ -9,8 +9,8 @@
     
     { "source": "/api/products", "destination": "/api/products.js" },
     { "source": "/api/products/(.*)", "destination": "/api/products.js" },
-    { "source": "/api/categories", "destination": "/api/products.js" },
-    { "source": "/api/test", "destination": "/api/products.js" },
+    { "source": "/api/categories", "destination": "/api/categories.js" },
+    { "source": "/api/test", "destination": "/api/test.js" },
     
     { "source": "/api/cart/(.*)", "destination": "/api/orders.js" },
     { "source": "/api/orders", "destination": "/api/orders.js" },
