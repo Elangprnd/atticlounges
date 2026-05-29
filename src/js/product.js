@@ -1,7 +1,11 @@
 // ===== PRODUCT PAGE FUNCTIONALITY ===== //
 
-let allProducts = [];
-let filteredProducts = [];
+if (typeof allProducts === 'undefined') {
+  window.allProducts = [];
+}
+if (typeof filteredProducts === 'undefined') {
+  window.filteredProducts = [];
+}
 
 // ===== CART FUNCTIONS ===== //
 function getCart() {
