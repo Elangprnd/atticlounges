@@ -92,12 +92,33 @@ async function seedProductsIfEmpty() {
   console.log('Seeded default products')
 }
 
+let dbInitialized = false;
+
+async function ensureDb() {
+  if (dbInitialized) return;
+  try {
+    await initDb();
+    await seedProductsIfEmpty();
+    dbInitialized = true;
+    console.log('Database ensured and ready');
+  } catch (err) {
+    console.error('Database ensure error:', err);
+    throw err;
+  }
+}
+
 app.get('/api/products', async (req, res) => {
   try {
+    await ensureDb();
     const { rows } = await pool.query('SELECT * FROM products WHERE is_sold = false ORDER BY created_at DESC LIMIT 50')
     res.json(rows)
   } catch (e) {
-    res.status(500).json({ message: 'Server error' })
+    console.error('GET /api/products error:', e);
+    res.status(500).json({ 
+      message: 'Server error', 
+      error: e.message,
+      detail: 'Pastikan DATABASE_URL sudah benar di Vercel Env Vars'
+    })
   }
 })
 
