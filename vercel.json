@@ -1,23 +1,23 @@
 {
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/api/auth/(.*)", "destination": "/services/user-service/src/index.js" },
-    { "source": "/api/users/(.*)", "destination": "/services/user-service/src/index.js" },
-    { "source": "/api/debug/(.*)", "destination": "/services/user-service/src/index.js" },
+    { "source": "/api/auth/(.*)", "destination": "/api/auth.js" },
+    { "source": "/api/users/(.*)", "destination": "/api/auth.js" },
+    { "source": "/api/debug/(.*)", "destination": "/api/auth.js" },
     
-    { "source": "/api/products", "destination": "/services/product-service/src/index.js" },
-    { "source": "/api/products/(.*)", "destination": "/services/product-service/src/index.js" },
-    { "source": "/api/test", "destination": "/services/product-service/src/index.js" },
+    { "source": "/api/products", "destination": "/api/products.js" },
+    { "source": "/api/products/(.*)", "destination": "/api/products.js" },
+    { "source": "/api/test", "destination": "/api/products.js" },
     
-    { "source": "/api/cart/(.*)", "destination": "/services/order-service/src/index.js" },
-    { "source": "/api/orders", "destination": "/services/order-service/src/index.js" },
-    { "source": "/api/orders/(.*)", "destination": "/services/order-service/src/index.js" },
-    { "source": "/api/admin/orders", "destination": "/services/order-service/src/index.js" },
-    { "source": "/api/admin/orders/(.*)", "destination": "/services/order-service/src/index.js" },
-    { "source": "/api/admin/cleanup-orders", "destination": "/services/order-service/src/index.js" },
+    { "source": "/api/cart/(.*)", "destination": "/api/orders.js" },
+    { "source": "/api/orders", "destination": "/api/orders.js" },
+    { "source": "/api/orders/(.*)", "destination": "/api/orders.js" },
+    { "source": "/api/admin/orders", "destination": "/api/orders.js" },
+    { "source": "/api/admin/orders/(.*)", "destination": "/api/orders.js" },
+    { "source": "/api/admin/cleanup-orders", "destination": "/api/orders.js" },
     
-    { "source": "/api/chat", "destination": "/services/ai-service/src/index.js" },
-    { "source": "/api/models", "destination": "/services/ai-service/src/index.js" },
+    { "source": "/api/chat", "destination": "/api/chat.js" },
+    { "source": "/api/models", "destination": "/api/chat.js" },
 
     { "source": "/admin-orders", "destination": "/pages/admin-orders.html" },
     { "source": "/admin", "destination": "/pages/admin.html" },
