@@ -166,12 +166,20 @@ async function fetchProducts() {
   try {
     const resp = await fetch('/api/products');
     if (!resp.ok) {
+      const errorText = await resp.text();
+      console.error('API Error Response:', errorText);
       throw new Error(`HTTP error! status: ${resp.status}`);
+    }
+    const contentType = resp.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      const text = await resp.text();
+      console.error('Expected JSON but got:', text);
+      throw new Error("Received non-JSON response from server");
     }
     allProducts = await resp.json();
     return allProducts;
   } catch (e) {
-    console.error('Failed to fetch products', e);
+    console.error('Failed to fetch products:', e);
     allProducts = [];
     return [];
   }

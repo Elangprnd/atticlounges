@@ -18,23 +18,28 @@ const pool = new Pool({
 })
 
 async function initDb() {
-  await pool.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";')
-  await pool.query(`
-    CREATE TABLE IF NOT EXISTS products (
-      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      name VARCHAR(255) NOT NULL,
-      description TEXT,
-      price DECIMAL NOT NULL,
-      image TEXT,
-      category VARCHAR(255),
-      condition VARCHAR(255),
-      size VARCHAR(255),
-      brand VARCHAR(255),
-      stock INTEGER DEFAULT 1,
-      is_sold BOOLEAN DEFAULT false,
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-  `)
+  try {
+    await pool.query('CREATE EXTENSION IF NOT EXISTS "pgcrypto";')
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS products (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        name VARCHAR(255) NOT NULL,
+        description TEXT,
+        price DECIMAL NOT NULL,
+        image TEXT,
+        category VARCHAR(255),
+        condition VARCHAR(255),
+        size VARCHAR(255),
+        brand VARCHAR(255),
+        stock INTEGER DEFAULT 1,
+        is_sold BOOLEAN DEFAULT false,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
+    `)
+    console.log('Database initialized successfully');
+  } catch (error) {
+    console.error('Database initialization error:', error);
+  }
 }
 
 const authenticateToken = (req, res, next) => {
