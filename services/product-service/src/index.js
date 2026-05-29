@@ -135,7 +135,7 @@ app.put('/api/products/reset-sold', async (req, res) => {
   try {
     const { rowCount } = await pool.query('UPDATE products SET is_sold = false, stock = 1 WHERE is_sold = true')
     res.json({ 
-      message: \`Reset \${rowCount} products to available\`,
+      message: `Reset ${rowCount} products to available`,
       modifiedCount: rowCount
     })
   } catch (error) {
@@ -147,7 +147,7 @@ app.put('/api/products/fix-stock', async (req, res) => {
   try {
     const { rowCount } = await pool.query('UPDATE products SET stock = 1 WHERE stock = 0')
     res.json({ 
-      message: \`Updated \${rowCount} products to have stock: 1\`,
+      message: `Updated ${rowCount} products to have stock: 1`,
       modifiedCount: rowCount
     })
   } catch (error) {
@@ -253,7 +253,7 @@ if (process.env.NODE_ENV !== 'test') {
 
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
   const PORT = process.env.PORT || 4002
-  app.listen(PORT, () => console.log(\`product-service listening on \${PORT}\`))
+  app.listen(PORT, () => console.log(`product-service listening on ${PORT}`))
 }
 
 export default app;
