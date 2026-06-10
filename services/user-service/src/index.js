@@ -3,14 +3,18 @@ import pg from 'pg'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import 'dotenv/config'
 
 const { Pool } = pg
 const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.get('/health', (req, res) => res.json({ ok: true }))
+
 const DATABASE_URL = process.env.DATABASE_URL
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwt'
+const PORT = process.env.PORT || 4001
 
 const pool = new Pool({
   connectionString: DATABASE_URL,
@@ -87,5 +91,11 @@ app.get('/api/users/me', async (req, res) => {
 app.use((req, res) => {
   res.status(404).json({ message: 'Route Not Found in User Service', path: req.url });
 });
+
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`👤 User Service running on port ${PORT}`);
+  });
+}
 
 export default app;

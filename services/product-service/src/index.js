@@ -2,14 +2,18 @@ import express from 'express'
 import pg from 'pg'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 
 const { Pool } = pg
 const app = express()
 app.use(cors())
 app.use(express.json())
 
+app.get('/health', (req, res) => res.json({ ok: true }))
+
 const DATABASE_URL = process.env.DATABASE_URL
 const JWT_SECRET = process.env.JWT_SECRET || 'supersecretjwt'
+const PORT = process.env.PORT || 4002
 
 const pool = new Pool({
   connectionString: DATABASE_URL,
@@ -32,14 +36,19 @@ async function ensureDb() {
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
       CREATE TABLE IF NOT EXISTS products (
-        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+      id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
         name VARCHAR(255) NOT NULL,
         description TEXT,
         price DECIMAL NOT NULL,
         image TEXT,
         category VARCHAR(255),
+        brand VARCHAR(255) DEFAULT 'No Brand',      
+        condition VARCHAR(100),
+        size VARCHAR(50),                           
+        stock INTEGER DEFAULT 1,                    
         is_sold BOOLEAN DEFAULT false,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
       );
     `);
     
@@ -54,21 +63,26 @@ async function ensureDb() {
       `);
     }
 
-    // Seed Products
-    const { rows: prodCount } = await pool.query('SELECT count(*) FROM products');
-    if (parseInt(prodCount[0].count) === 0) {
-      await pool.query(`INSERT INTO products (name, category, price, image) VALUES 
-        ('Selamat Tinggal - Tere Liye', 'Books', 70000, 'https://i.pinimg.com/736x/99/7c/74/997c7452cd8405547fb0775d3d5aae87.jpg'),
-        ('Laut Bercerita - Leila S. Chudori', 'Books', 85000, 'https://i.pinimg.com/1200x/b4/71/f8/b471f81470297a93aae8bc706c81ee7c.jpg'),
-        ('Hoodie Dino', 'Fashion', 120000, 'https://i.pinimg.com/1200x/cb/0d/30/cb0d300987439aa123c1a8cd59dbdd5a.jpg')
-      `);
+    // Clean up unwanted seeded products (one-time or every startup as requested)
+    const productsToDelete = [
+      'Y2K Shield Sunglasses',
+      'Selamat Tinggal - Tere Liye',
+      'Laut Bercerita - Leila S. Chudori',
+      'Hoodie Dino'
+    ];
+    
+    for (const name of productsToDelete) {
+      await pool.query('DELETE FROM products WHERE name = $1', [name]);
     }
+
     dbInitialized = true;
-    console.log('✅ Product Database Ready');
+    console.log('✅ Product Database Ready (Unwanted products removed)');
   } catch (err) {
     console.error('❌ DB Error:', err.message);
   }
 }
+
+app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 app.get('/api/categories', async (req, res) => {
   await ensureDb();
@@ -123,5 +137,11 @@ app.delete('/api/products/:id', auth, async (req, res) => {
 app.use((req, res) => {
   res.status(404).json({ message: 'Route Not Found in Product Service', path: req.url });
 });
+
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`📦 Product Service running on port ${PORT}`);
+  });
+}
 
 export default app;

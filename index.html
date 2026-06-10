@@ -141,24 +141,28 @@
 
     <main>
         <!-- New Product -->
-        <section class="py-14 px-6 sm:px-8 md:px-6 text-center bg-[#EDE0D4]">
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-wide uppercase mb-10 text-[#382E2A]">New Arrival</h1>
+        <section class="py-14 px-6 sm:px-8 md:px-6 bg-[#EDE0D4]">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center mb-10">
+                <h1 class="text-3xl md:text-5xl font-extrabold tracking-wide uppercase text-[#382E2A]">New Arrival</h1>
+                <div class="flex gap-3">
+                    <button class="nav-btn bg-[#382E2A] rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-[#8C5E3C] transition-all hover:scale-105 active:scale-95" onclick="scrollProducts('prev')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                        </svg>
+                    </button>
+                    <button class="nav-btn bg-[#382E2A] rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-[#8C5E3C] transition-all hover:scale-105 active:scale-95" onclick="scrollProducts('next')">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
 
-            <div class="relative max-w-7xl mx-auto px-4">
-                <!-- Tombol kiri -->
-                <button class="nav-btn hidden md:flex absolute -left-4 md:-left-8 top-1/2 -translate-y-1/2 bg-white rounded-full w-12 h-12 items-center justify-center shadow-lg hover:shadow-xl border border-gray-200 z-20 hover:bg-gray-100 transition-all hover:scale-110 active:scale-95" onclick="scrollProducts('prev')">
-                    <img class="w-6 h-6" src="https://cdn-icons-png.flaticon.com/128/271/271220.png" alt="Previous">
-                </button>
-
+            <div class="max-w-7xl mx-auto px-4">
                 <!-- List produk -->
                 <div id="productList" class="flex overflow-x-auto gap-6 pb-8 scrollbar-hide snap-x snap-mandatory scroll-smooth">
                     <p class="text-center w-full py-10 text-gray-500">Memuat koleksi terbaru...</p>
                 </div>
-
-                <!-- Tombol kanan -->
-                <button class="nav-btn hidden md:flex absolute -right-4 md:-right-8 top-1/2 -translate-y-1/2 bg-white rounded-full w-12 h-12 items-center justify-center shadow-lg hover:shadow-xl border border-gray-200 z-20 hover:bg-gray-100 transition-all hover:scale-110 active:scale-95" onclick="scrollProducts('next')">
-                    <img class="w-6 h-6" src="https://cdn-icons-png.flaticon.com/128/271/271228.png" alt="Next">
-                </button>
             </div>
         </section>
 

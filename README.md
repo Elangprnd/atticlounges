@@ -55,35 +55,13 @@ GROQ_API_KEY=gsk_your_actual_api_key_here
 PORT=4004
 ```
 
-#### 3. Start All Services
-
-##### 🖥️ **Cara 1: Menggunakan start.bat (Recommended)**
+#### 3. Start All Services (Local Development)
 ```bash
-# Buka Command Prompt atau PowerShell di root project
-# Jalankan:
-.\start.bat
+# Start all services with a single command
+npm run dev
 ```
 
-##### 🔧 **Cara 2: Manual Start (VS Code Terminal)**
-```bash
-# Buka 4 terminal terpisah di VS Code:
-
-# Terminal 1 - User Service
-cd services/user-service
-npm start
-
-# Terminal 2 - Product Service  
-cd services/product-service
-npm start
-
-# Terminal 3 - Order Service
-cd services/order-service
-npm start
-
-# Terminal 4 - AI Service
-cd services/ai-service
-npm start
-```
+> **Note on Vercel:** While local development requires running all services concurrently, Vercel handles this automatically in production based on your `vercel.json` configuration. Each API route is treated as an independent Serverless Function.
 
 ##### 🚀 **Cara 3: PowerShell Background (Advanced)**
 ```powershell
@@ -193,10 +171,7 @@ netstat -ano | findstr ":400[1-4]"
 ### Scripts Available
 ```bash
 npm run install-all    # Install semua dependencies
-npm run start:user     # Start user service
-npm run start:product  # Start product service  
-npm run start:order     # Start order service
-npm run start:ai        # Start AI service
+npm run dev     # Start all services
 ```
 
 ### API Endpoints
@@ -236,7 +211,7 @@ netstat -an | findstr :4003
 netstat -an | findstr :4004
 ```
 
-#### MongoDB Connection
+#### PostgreSQL Connection (Neon)
 ```bash
 # Check MongoDB status
 mongosh --eval "show dbs"
@@ -370,21 +345,16 @@ atticlounges/
 │   ├── css/
 │   ├── js/
 │   └── img/
-└── start.bat              # Windows startup script
+└── package.json           # Root configuration
 ```
 
 ### 🎯 **Quick VS Code Commands**
 
 #### **Start Everything**
 ```bash
-# Method 1: Use start.bat
-.\start.bat
-
-# Method 2: Manual (4 terminals)
-# Terminal 1: cd services/user-service && npm start
-# Terminal 2: cd services/product-service && npm start  
-# Terminal 3: cd services/order-service && npm start
-# Terminal 4: cd services/ai-service && npm start
+# Method 1: Use NPM Scripts
+npm run dev
+npm run dev
 ```
 
 #### **Stop Everything**
@@ -462,7 +432,7 @@ tasklist | findstr node
 ### First Time Setup
 1. **Install prerequisites** (Node.js, MongoDB)
 2. **Get Groq API key** (gratis)
-3. **Run setup**: `.\start.bat`
+3. **Run setup**: `npm run dev`
 4. **Create owner account** via website
 5. **Add products** via admin panel
 6. **Test AI chat** functionality
@@ -532,7 +502,7 @@ netstat -ano | findstr ":400[1-4]"
 taskkill /F /IM node.exe
 
 # Start all services (PowerShell)
-.\start.bat
+npm run dev
 ```
 
 #### **Debugging di VS Code**
@@ -648,9 +618,9 @@ Ctrl+F5          # Run without debugging
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Start All Services",
+      "label": "Start User Service",
       "type": "shell",
-      "command": "start.bat",
+      "command": "npm run dev",
       "group": "build"
     },
     {

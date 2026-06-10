@@ -2,6 +2,7 @@ import express from 'express'
 import pg from 'pg'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
+import 'dotenv/config'
 
 const { Pool } = pg
 

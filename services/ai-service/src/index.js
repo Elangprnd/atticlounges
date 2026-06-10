@@ -1,16 +1,14 @@
 import express from 'express';
 import cors from 'cors';
 import Groq from 'groq-sdk';
-import dotenv from 'dotenv';
-
-// Load environment variables from config.env
-dotenv.config({ path: './config.env' });
+import 'dotenv/config';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const PORT = process.env.PORT || 4004;
 
 // Initialize Groq client with a check
 const getGroqClient = () => {

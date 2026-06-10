@@ -12,12 +12,15 @@
     "start:user": "cd services/user-service && npm start",
     "start:product": "cd services/product-service && npm start",
     "start:order": "cd services/order-service && npm start",
-    "setup": "npm run install-all && echo 'Setup complete! Use start.bat to begin.'"
+    "start:ai": "cd services/ai-service && npm start",
+    "dev": "concurrently \"npm run start:user\" \"npm run start:product\" \"npm run start:order\" \"npm run start:ai\"",
+    "setup": "npm run install-all && echo 'Setup complete! Use npm run dev to start everything.'"
   },
   "keywords": [
     "ecommerce",
     "nodejs",
-    "mongodb",
+    "postgresql",
+    "neon",
     "express",
     "owner-management"
   ],
@@ -29,6 +32,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.1",
     "postcss": "^8.5.6",
     "tailwindcss": "^4.1.14"
   },

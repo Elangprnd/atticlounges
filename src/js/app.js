@@ -1,5 +1,28 @@
-const USER_SERVICE = '';
-const PRODUCT_SERVICE = '';
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+const USER_SERVICE = isLocal ? 'http://localhost:4001' : '';
+const PRODUCT_SERVICE = isLocal ? 'http://localhost:4002' : '';
+const ORDER_SERVICE = isLocal ? 'http://localhost:4003' : '';
+const AI_SERVICE = isLocal ? 'http://localhost:4004' : '';
+
+// Local Development Proxy: Redirects /api calls to the correct local microservice
+if (isLocal) {
+  const originalFetch = window.fetch;
+  window.fetch = function(url, options) {
+    if (typeof url === 'string' && url.startsWith('/api/')) {
+      if (url.startsWith('/api/auth') || url.startsWith('/api/users') || url.startsWith('/api/debug')) {
+        url = USER_SERVICE + url;
+      } else if (url.startsWith('/api/products') || url.startsWith('/api/categories') || url.startsWith('/api/test')) {
+        url = PRODUCT_SERVICE + url;
+      } else if (url.startsWith('/api/orders') || url.startsWith('/api/admin/orders') || url.startsWith('/api/cart') || url.startsWith('/api/admin/cleanup-orders')) {
+        url = ORDER_SERVICE + url;
+      } else if (url.startsWith('/api/chat') || url.startsWith('/api/models')) {
+        url = AI_SERVICE + url;
+      }
+      console.log(`[Local Dev] Redirecting API call to: ${url}`);
+    }
+    return originalFetch(url, options);
+  };
+}
 
 function loginModal() {
   const openBtn = document.getElementById("login");
@@ -746,16 +769,30 @@ async function renderProducts(productList) {
 
 // ===== PRODUCT EVENT LISTENERS ===== //
 function addProductEventListeners() {
+  const isInPages = window.location.pathname.includes('/pages/');
+
   // Add to Cart
   document.querySelectorAll(".add-to-cart").forEach((btn) => {
     btn.addEventListener("click", async (e) => {
-      const productId = e.target.dataset.id;
+      const productId = e.currentTarget.dataset.id;
       
+      // If admin, redirect to admin page
+      if (typeof isAdmin === 'function' && isAdmin()) {
+        window.location.href = isInPages ? 'admin.html' : 'pages/admin.html';
+        return;
+      }
+
       try {
-        // Fetch product details from API
+        // Fetch product details from API to check status
         const response = await fetch(`/api/products/${productId}`);
         if (!response.ok) throw new Error('Product not found');
         const product = await response.json();
+
+        // Check if product is sold
+        if (product.is_sold === true || product.isSold === true) {
+          alert('Produk ini sudah terjual!');
+          return;
+        }
         
         let cart = getCart();
         const existing = cart.find((item) => item._id === productId);
@@ -771,12 +808,13 @@ function addProductEventListeners() {
         updateCartCount();
         
         // Show success message
-        const originalText = e.target.textContent;
-        e.target.textContent = "Added!";
-        e.target.classList.add("bg-green-500");
+        const target = e.currentTarget;
+        const originalText = target.textContent;
+        target.textContent = "Added!";
+        target.classList.add("bg-green-500");
         setTimeout(() => {
-          e.target.textContent = originalText;
-          e.target.classList.remove("bg-green-500");
+          target.textContent = originalText;
+          target.classList.remove("bg-green-500");
         }, 1000);
       } catch (error) {
         console.error('Error adding to cart:', error);
@@ -788,7 +826,13 @@ function addProductEventListeners() {
   // Wishlist toggle
   document.querySelectorAll(".wishlist-btn").forEach((btn) => {
     btn.addEventListener("click", (e) => {
-      const productId = btn.dataset.id;
+      // Block admin from adding to wishlist
+      if (typeof isAdmin === 'function' && isAdmin()) {
+        alert('Admin tidak bisa menambah produk ke wishlist!');
+        return;
+      }
+
+      const productId = e.currentTarget.dataset.id;
       let wishlist = getWishlist();
 
       if (wishlist.includes(productId)) {
@@ -798,8 +842,14 @@ function addProductEventListeners() {
       }
 
       saveWishlist(wishlist);
-      // Re-render to update wishlist icons
-      renderProducts();
+      // Update UI (re-render might be needed if icons don't update automatically)
+      const svg = e.currentTarget.querySelector('svg');
+      const isNowWishlisted = wishlist.includes(productId);
+      if (svg) {
+        svg.setAttribute('fill', isNowWishlisted ? 'red' : 'none');
+        svg.classList.toggle('text-red-500', isNowWishlisted);
+        svg.classList.toggle('text-gray-900', !isNowWishlisted);
+      }
     });
   });
 
@@ -807,7 +857,8 @@ function addProductEventListeners() {
   document.querySelectorAll(".view-detail").forEach((btn) => {
     btn.addEventListener("click", (e) => {
       const productId = e.currentTarget.dataset.id;
-      window.location.href = `pages/detail.html?id=${productId}`;
+      const targetURL = isInPages ? `detail.html?id=${productId}` : `pages/detail.html?id=${productId}`;
+      window.location.href = targetURL;
     });
   });
 }
@@ -816,9 +867,11 @@ function addProductEventListeners() {
 function scrollProducts(direction) {
   const list = document.getElementById('productList');
   if (!list) return;
-  const card = list.querySelector('div');
-  const step = card ? card.clientWidth + 20 : 300; // approximate gap
-  const delta = direction === 'next' ? step : -step;
+  
+  // Scroll by roughly 80% of the container width to keep context
+  const scrollAmount = list.clientWidth * 0.8;
+  const delta = direction === 'next' ? scrollAmount : -scrollAmount;
+  
   list.scrollBy({ left: delta, behavior: 'smooth' });
 }
 
